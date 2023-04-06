@@ -30,7 +30,7 @@ m
 m <- leaflet() %>% 
   addTiles() %>% 
   setView( lng = -65, lat = -65, zoom = 5 ) %>% 
-  addProviderTiles("Esri.OceanBasemap")
+  addProviderTiles("Esri.WorldImagery")
 m
 
 #you can try these other tiles and find more here (https://github.com/leaflet-extras/leaflet-providers)
@@ -46,6 +46,7 @@ m
 #saveWidget(m, file=paste0( getwd(), "/HtmlWidget/backgroundMapTile.html", width="1000px"))
 #########
 
+#now try with my data plotting Zeu from MASTERSHEET
 
 library(leaflet)
 MASTERSHEET <- read.csv("data/FjordPhyto MASTER SHEET_pulled5april2023.csv")
@@ -59,7 +60,7 @@ MASTERSHEET <- MASTERSHEET %>%
 colnames(MASTERSHEET)
 
 # Create a color palette with handmade bins.
-mybins <- seq(0, 40, by=10)
+mybins <- seq(0, 35, by=5)
 mypalette <- colorBin( palette="YlOrBr", domain=MASTERSHEET$Zeu_calc_m, na.color="transparent", bins=mybins)
 
 mytext <- paste(
@@ -72,7 +73,7 @@ mytext <- paste(
 # Final Map
 m <- leaflet(MASTERSHEET) %>% 
   addTiles()  %>% 
-  setView( lat=-65, lng=-65 , zoom=4) %>%
+  setView( lat=-65, lng=-65 , zoom=6) %>%
   addProviderTiles("Esri.WorldImagery") %>%
   addCircleMarkers(~long, ~lat, 
                    fillColor = ~mypalette(Zeu_calc_m), fillOpacity = 0.7, color="white", radius=8, stroke=FALSE,
@@ -82,5 +83,3 @@ m <- leaflet(MASTERSHEET) %>%
   addLegend( pal=mypalette, values=~Zeu_calc_m, opacity=0.9, title = "Euphotic Depth", position = "bottomright" )
 
 m 
-
-
