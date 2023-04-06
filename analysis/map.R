@@ -13,7 +13,7 @@ geom_polygon(data = map, aes(x=long, y = lat, group = group), fill = "grey", col
   coord_map(projection = "ortho",xlim = c(-75,-55), ylim = c(-72,-60),orientation = c(-100,-80,-12.5)) +
   geom_point(data = metadata, aes(x = Long, y = Lat), size = 4, pch = 4) 
 
-##### MAKE A MAP USING LEAFLET ######
+##### MAKE A MAP USING LEAFLET https://r-graph-gallery.com/19-map-leafletr.html  ######
 library(leaflet)
 
 # Note: if you do not already installed it, install it with:
