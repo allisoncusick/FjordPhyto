@@ -17,7 +17,7 @@ meta_20_22 <- meta_20_22 %>% filter(project_name == "WAP")
 
 early_meta$Date <- dmy(early_meta$Date)
 
-meta_20_22$date <- c(dmy(meta_20_22$date[1:39]),mdy(meta_20_22$date[40:62]))
+meta_20_22$date <- dmy(meta_20_22$date)
 
 meta_19_22_extra <- read.csv("data/2022 Metadata 10_18_22_p1_18S.csv")
 
@@ -133,7 +133,7 @@ taxa_table <- taxa_table %>% distinct_all()
 early_meta <- early_meta[,c(1,7:12)]
 colnames(early_meta) <- c("sample_id","Date","Time","Site_Name","Lat","Long","Operator")
 
-meta_20_22 <- meta_20_22[,c(1,7:12)]
+meta_20_22 <- meta_20_22[,c(1,9:14)]
 colnames(meta_20_22) <- c("sample_id","Date","Time","Site_Name","Lat","Long","Operator")
 
 meta_19_22_extra <- meta_19_22_extra[,c(1, 7:12)]
