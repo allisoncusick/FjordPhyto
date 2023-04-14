@@ -5,25 +5,30 @@ library(lubridate)
 
 # data processing file
 
-# all metadata 2017-2020
+# all metadata 2017-2020 samples 1-200 in a submission during 2020
 
-early_meta <- read.csv("data/Metadata_2017_2020.csv")
+meta_2020_1_200 <- read.csv("data/metadata/2020_pool_18S.csv")
 
-early_meta <- early_meta %>% filter(SampleName_18sv9_fastq != "")
+meta_2020_1_200 <- meta_1_200 %>% filter(sample.id != "")
 
-meta_20_22 <- read.csv("data/Metadata_2022.csv")
+#all metadata mixed 2019 2021 samples 1 - 190 in a submission during 2022
 
-meta_20_22 <- meta_20_22 %>% filter(project_name == "WAP")
+meta_2022_1_190 <- read.csv("data/metadata/2022_08_30_pool1_18S.csv")
 
-early_meta$Date <- dmy(early_meta$Date)
+meta_2022_1_190 <- meta_2022_1_190 %>% filter(project_name == "WAP")
 
-meta_20_22$date <- dmy(meta_20_22$date)
+#no need to fix dates anymore
+#early_meta$Date <- dmy(early_meta$Date)
 
-meta_19_22_extra <- read.csv("data/2022 Metadata 10_18_22_p1_18S.csv")
+#meta_20_22$date <- dmy(meta_20_22$date)
 
-meta_19_22_extra <- meta_19_22_extra %>% filter(project_name == "WAP")
+meta_2022_extra <- read.csv("data/metadata/2022_10_18_pool1_18S.csv")
 
-meta_19_22_extra$date <-dmy(meta_19_22_extra$date)
+meta_2022_extra <- meta_2022_extra %>% filter(project_name == "WAP")
+#a dino sample pops up ... filter out? 
+
+#no need to change dates, did it in original file
+#meta_19_22_extra$date <-dmy(meta_19_22_extra$date)
 
 
 # LOAD IN DATA
@@ -78,7 +83,7 @@ asv_table_20_22 <- asv_table_20_22 %>% filter(Feature.ID %in% taxa_20_22$Feature
 
 asv_table_20_22$samples <- gsub("^([^_]*_[^_]*)_.*$", "\\1", asv_table_20_22$samples)
 
-asv_table_20_22 <- asv_table_20_22 %>% filter(samples %in% meta_20_22$sample.id)
+asv_table_20_22 <- asv_table_20_22 %>% filter(samples %in% meta_2022_1_190$sample.id)
 
 taxa_20_22 <- taxa_20_22 %>% filter(Feature.ID %in% asv_table_20_22$Feature.ID)
 
@@ -129,52 +134,56 @@ taxa_table <- bind_rows(taxa_17_18, taxa_18_19, taxa_19_20, taxa_20_22, taxa_20_
 taxa_table <- taxa_table %>% distinct_all()
 
 # metadata pull out desired columns and relabel them what i want
+colnames(meta_2020_1_200)
+meta_2020_1_200 <- meta_2020_1_200[,c(1,2:7)]
 
-early_meta <- early_meta[,c(1,7:12)]
-colnames(early_meta) <- c("sample_id","Date","Time","Site_Name","Lat","Long","Operator")
+colnames(meta_2020_1_200) <- c("sample_id","Date","Time","Site_Name","Lat","Long","Operator")
 
-meta_20_22 <- meta_20_22[,c(1,9:14)]
-colnames(meta_20_22) <- c("sample_id","Date","Time","Site_Name","Lat","Long","Operator")
+colnames(meta_2022_1_190)
+meta_2022_1_190 <- meta_2022_1_190[,c(1,7:12)]
+colnames(meta_2022_1_190) <- c("sample_id","Date","Time","Site_Name","Lat","Long","Operator")
 
-meta_19_22_extra <- meta_19_22_extra[,c(1, 7:12)]
-colnames(meta_19_22_extra) <- c("sample_id","Date","Time","Site_Name","Lat","Long","Operator")
+colnames(meta_2022_extra)
+meta_2022_extra <- meta_2022_extra[,c(1, 7:12)]
+colnames(meta_2022_extra) <- c("sample_id","Date","Time","Site_Name","Lat","Long","Operator")
 
-metadata <- bind_rows(early_meta, meta_20_22, meta_19_22_extra)
+metadata <- bind_rows(meta_2020_1_200, meta_2022_1_190, meta_2022_extra)
 
 #check the site names as they're all OVER THE PLACE, label as desired
 
 metadata$Site_Name <- str_to_title(metadata$Site_Name)
 metadata$Site_Name
+#i think the code below isn't needed any longer cuz I changed them all in the original file ... 
 
-metadata$Site_Name[which(metadata$Site_Name == "Danco")] <- "Danco Island"
-metadata$Site_Name[which(metadata$Site_Name == "Cuverville")] <- "Cuverville Island"
-metadata$Site_Name[which(metadata$Site_Name == "Paradise Harbour")] <- "Paradise Harbour"
-metadata$Site_Name[which(metadata$Site_Name == "Paradise Bay")] <- "Paradise Harbour"
-metadata$Site_Name[which(metadata$Site_Name == "Paradise Bay/Skornthrop Cove")] <- "Paradise Harbour"
-metadata$Site_Name[which(metadata$Site_Name == "Base Brown")] <- "Paradise Harbour"
-metadata$Site_Name[which(metadata$Site_Name == "Orne")] <- "Orne Harbour"
-metadata$Site_Name[which(metadata$Site_Name == "Peterman Island")] <- "Petermann Island"
-metadata$Site_Name[which(metadata$Site_Name == "Plenneau")] <- "Plenneau Bay"
-metadata$Site_Name[which(metadata$Site_Name == "Pleaneau")] <- "Plenneau Bay"
-metadata$Site_Name[which(metadata$Site_Name == "Halfmoon")] <- "Halfmoon Island"
-metadata$Site_Name[which(metadata$Site_Name == "Half-Moon Island")] <- "Halfmoon Island"
-metadata$Site_Name[which(metadata$Site_Name == "Kinnes Cove/Madder Cliffs")] <- "Kinnes Cove"
-metadata$Site_Name[which(metadata$Site_Name == "Mikkelson Harbour")] <- "Mikkelsen Harbour"
+#metadata$Site_Name[which(metadata$Site_Name == "Danco")] <- "Danco Island"
+#metadata$Site_Name[which(metadata$Site_Name == "Cuverville")] <- "Cuverville Island"
+#metadata$Site_Name[which(metadata$Site_Name == "Paradise Harbour")] <- "Paradise Harbour"
+#metadata$Site_Name[which(metadata$Site_Name == "Paradise Bay")] <- "Paradise Harbour"
+#metadata$Site_Name[which(metadata$Site_Name == "Paradise Bay/Skornthrop Cove")] <- "Paradise Harbour"
+#metadata$Site_Name[which(metadata$Site_Name == "Base Brown")] <- "Paradise Harbour"
+#metadata$Site_Name[which(metadata$Site_Name == "Orne")] <- "Orne Harbour"
+#metadata$Site_Name[which(metadata$Site_Name == "Peterman Island")] <- "Petermann Island"
+#metadata$Site_Name[which(metadata$Site_Name == "Plenneau")] <- "Plenneau Bay"
+#metadata$Site_Name[which(metadata$Site_Name == "Pleaneau")] <- "Plenneau Bay"
+#metadata$Site_Name[which(metadata$Site_Name == "Halfmoon")] <- "Halfmoon Island"
+#metadata$Site_Name[which(metadata$Site_Name == "Half-Moon Island")] <- "Halfmoon Island"
+#metadata$Site_Name[which(metadata$Site_Name == "Kinnes Cove/Madder Cliffs")] <- "Kinnes Cove"
+#metadata$Site_Name[which(metadata$Site_Name == "Mikkelson Harbour")] <- "Mikkelsen Harbour"
 
-metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 1 Gerlache Useful ")] <- "Andvord Bay Transect Station 1 Useful"
-metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Transect 1 -Useful")] <- "Andvord Bay Transect Station 1 Useful"
+#metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 1 Gerlache Useful ")] <- "Andvord Bay Transect Station 1 Useful"
+#metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Transect 1 -Useful")] <- "Andvord Bay Transect Station 1 Useful"
 
-metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Transect 2 -Errera" )] <- "Andvord Bay Transect Station 2 Errera"
-metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 2 Errera ")] <- "Andvord Bay Transect Station 2 Errera"
+#metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Transect 2 -Errera" )] <- "Andvord Bay Transect Station 2 Errera"
+#metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 2 Errera ")] <- "Andvord Bay Transect Station 2 Errera"
 
-metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Transect 3 -Mid"  )] <- "Andvord Bay Transect Station 3 Middle"
-metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 3 Mid " )] <- "Andvord Bay Transect Station 3 Middle"
+#metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Transect 3 -Mid"  )] <- "Andvord Bay Transect Station 3 Middle"
+#metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 3 Mid " )] <- "Andvord Bay Transect Station 3 Middle"
 
-metadata$Site_Name[which(metadata$Site_Name == "Anvord Bay Transect 4-Neko Harbour")] <- "Anvord Bay Transect Station 4 Neko Harbour"
-metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 5 Neko ")] <- "Anvord Bay Transect Station 4 Neko Harbour"
+#metadata$Site_Name[which(metadata$Site_Name == "Anvord Bay Transect 4-Neko Harbour")] <- "Anvord Bay Transect Station 4 Neko Harbour"
+#metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 5 Neko ")] <- "Anvord Bay Transect Station 4 Neko Harbour"
 
-metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Transect 5-Int")] <- "Andvord Bay Transect Station 5 Interior"
-metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 4 Int ")] <- "Andvord Bay Transect Station 5 Interior"
+#metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Transect 5-Int")] <- "Andvord Bay Transect Station 5 Interior"
+#metadata$Site_Name[which(metadata$Site_Name == "Andvord Bay Station 4 Int ")] <- "Andvord Bay Transect Station 5 Interior"
 
 metadata$Site_Name[which(metadata$Site_Name == "")] <- NA
 
@@ -182,7 +191,7 @@ sites <- metadata %>% group_by(Site_Name) %>%
   summarise(Lat = mean(Lat, na.rm = TRUE),
             Long = mean(Long, na.rm = TRUE))
 
-#need to fix the sites NA GPS data, I added lat/long to origina csv file loaded .. still NA .. ignore those
+#need to fix the sites NA GPS data, I added lat/long to original csv file loaded .. still NA .. ignore those
 
 
 metadata$Lat <- sites$Lat[match(metadata$Site_Name,sites$Site_Name)]
