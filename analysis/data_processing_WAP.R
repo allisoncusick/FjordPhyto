@@ -10,6 +10,7 @@ library(lubridate)
 meta_2020_1_200 <- read.csv("data/metadata/2020_pool_18S.csv")
 
 meta_2020_1_200 <- meta_1_200 %>% filter(sample.id != "")
+#is that code above needed? 
 
 #all metadata mixed 2019 2021 samples 1 - 190 in a submission during 2022
 
