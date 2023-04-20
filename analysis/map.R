@@ -50,14 +50,21 @@ m
 
 library(leaflet)
 MASTERSHEET <- read.csv("data/FjordPhyto MASTER SHEET_pulled5april2023.csv")
-#relabel latdd long dd 
 
-MASTERSHEET <- MASTERSHEET %>% 
-  rename("lat" = "Latitude.DD") 
-MASTERSHEET <- MASTERSHEET %>% 
-  rename("long" = "Longitude.DD")
+#relabel GPS Decimal Degrees  
+
+MASTERSHEET$long <-MASTERSHEET$Longitude.DD
+MASTERSHEET$lat <- MASTERSHEET$Latitude.DD
+
+#MASTERSHEET <- MASTERSHEET %>% 
+ # rename("lat" = "Latitude.DD") 
+#MASTERSHEET <- MASTERSHEET %>% 
+ # rename("lng" = "Longitude.DD")
 
 colnames(MASTERSHEET)
+
+#FIGURE OUT HOW TO REMOVE Zeu NAs ... 
+#ADD THAT CODE HERE .... 
 
 # Create a color palette with handmade bins.
 mybins <- seq(0, 35, by=5)
@@ -83,3 +90,7 @@ m <- leaflet(MASTERSHEET) %>%
   addLegend( pal=mypalette, values=~Zeu_calc_m, opacity=0.9, title = "Euphotic Depth", position = "bottomright" )
 
 m 
+
+#amazing interactive, love it
+
+#############################
