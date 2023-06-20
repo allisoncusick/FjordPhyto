@@ -1,0 +1,272 @@
+﻿sample_id,samples,day,month,year,Date,time_local,time_utc,Site_Name,Lat,Long,Operator,Zeu_m
+sample_001,sample_001,13,11,2017,11/13/2017,16:50,19:50,Cierva Cove,-64.156,-60.873,Polar Latitudes,16.25
+sample_032,sample_032,14,11,2017,11/14/2017,9:29,12:29,Neko Harbour,-64.851,-62.542,Polar Latitudes,11.51
+sample_002,sample_002,19,11,2017,11/19/2017,14:19,17:19,Cierva Cove,-64.156,-60.873,G Adventures,14.22
+sample_010,sample_010,22,11,2017,11/22/2017,11:55,14:55,Cuverville Island,-64.671,-62.611,Polar Latitudes,21.81
+sample_033,sample_033,23,11,2017,11/23/2017,16:14,19:14,Neko Harbour,-64.851,-62.542,Polar Latitudes,10.56
+sample_074,sample_074,25,11,2017,11/25/2017,9:35,12:35,Enterprise Island,-64.539,-61.98,Polar Latitudes,13.54
+sample_011,sample_011,2,12,2017,12/2/2017,9:54,12:54,Cuverville Island,-64.671,-62.611,Polar Latitudes,8.63
+sample_034,sample_034,2,12,2017,12/2/2017,16:31,19:31,Neko Harbour,-64.851,-62.542,Polar Latitudes,2.71
+sample_035,sample_035,9,12,2017,12/9/2017,8:45,11:45,Neko Harbour,-64.851,-62.542,G Adventures,5.08
+sample_003,sample_003,13,12,2017,12/13/2017,16:11,19:11,Cierva Cove,-64.156,-60.873,Antarctica21,9.48
+sample_012,sample_012,14,12,2017,12/14/2017,9:55,12:55,Cuverville Island,-64.671,-62.611,Antarctica21,6.77
+sample_054,sample_054,14,12,2017,12/14/2017,16:00,19:00,Paradise Harbour,-64.912,-62.862,Antarctica21,9.48
+sample_070,sample_070,15,12,2017,12/15/2017,15:58,18:58,Wilhelmina Bay,-64.642,-62.16,Antarctica21,6.1
+sample_023,sample_023,16,12,2017,12/16/2017,15:45,18:45,Danco Island,-64.746,-62.622,G Adventures,8.13
+sample_036,sample_036,16,12,2017,12/16/2017,10:15,13:15,Neko Harbour,-64.851,-62.542,G Adventures,7.45
+sample_004,sample_004,18,12,2017,12/18/2017,10:06,13:06,Cierva Cove,-64.156,-60.873,Antarctica21,15.17
+sample_055,sample_055,18,12,2017,12/18/2017,16:20,19:20,Paradise Harbour,-64.912,-62.862,G Adventures,7.11
+sample_024,sample_024,19,12,2017,12/19/2017,9:48,12:48,Danco Island,-64.746,-62.622,Antarctica21,6.1
+sample_013,sample_013,20,12,2017,12/20/2017,15:47,18:47,Cuverville Island,-64.671,-62.611,Antarctica21,6.5
+sample_025,sample_025,25,12,2017,12/25/2017,10:40,13:40,Danco Island,-64.746,-62.622,G Adventures,5.08
+sample_037,sample_037,25,12,2017,12/25/2017,12:00,15:00,Neko Harbour,-64.851,-62.542,Antarctica21,
+sample_051,sample_051,25,12,2017,12/25/2017,15:50,18:50,Orne Harbour,-64.638,-62.534,Antarctica21,6.37
+sample_056,sample_056,25,12,2017,12/25/2017,16:55,19:55,Paradise Harbour,-64.912,-62.862,G Adventures,10.16
+sample_065,sample_065,26,12,2017,12/26/2017,15:00,18:00,Petermann Island,-65.173,-64.116,G Adventures,10.84
+sample_014,sample_014,28,12,2017,12/28/2017,9:30,12:30,Cuverville Island,-64.671,-62.611,Antarctica21,6.37
+sample_038,sample_038,28,12,2017,12/28/2017,16:00,19:00,Neko Harbour,-64.851,-62.542,G Adventures,7.79
+sample_039,sample_039,30,12,2017,12/30/2017,14:10,17:10,Andvord Bay Transect Station 1 Useful,-64.725,-62.858,Antarctica21,4.88
+sample_040,sample_040,30,12,2017,12/30/2017,14:51,17:51,Andvord Bay Transect Station 2 Errera,-64.81,-62.67,Antarctica21,7.31
+sample_041,sample_041,30,12,2017,12/30/2017,15:25,18:25,Andvord Bay Transect Station 3 Middle,-64.808,-62.672,Antarctica21,9.48
+sample_042,sample_042,30,12,2017,12/30/2017,16:32,19:32,Andvord Bay Transect Station 5 Interior,-64.849,-62.539,Antarctica21,9.48
+sample_043,sample_043,30,12,2017,12/30/2017,17:47,20:47,Andvord Bay Transect Station 4 Neko,-64.849,-62.539,Antarctica21,8.40
+sample_052,sample_052,30,12,2017,12/30/2017,10:20,13:20,Orne Harbour,-64.638,-62.534,Antarctica21,10.02
+sample_079,sample_079,30,12,2017,12/30/2017,15:30,18:30,Brown Bluff,-63.52,-56.873,G Adventures,9.48
+sample_057,sample_057,1,1,2018,1/1/2018,12:00,15:00,Paradise Harbour,-64.912,-62.862,,
+sample_005,sample_005,2,1,2018,1/2/2018,9:53,12:53,Cierva Cove,-64.156,-60.873,Antarctica21,10.70
+sample_026,sample_026,2,1,2018,1/2/2018,12:00,15:00,Danco Island,-64.746,-62.622,,
+sample_077,sample_077,2,1,2018,1/2/2018,20:08,23:08,,,,,
+sample_078,sample_078,2,1,2018,1/2/2018,21:14,0:14,,,,,
+sample_044,sample_044,4,1,2018,1/4/2018,14:30,17:30,Neko Harbour,-64.851,-62.542,Lindblad Expeditions,13.54
+sample_015,sample_015,5,1,2018,1/5/2018,10:30,13:30,Cuverville Island,-64.671,-62.611,Quixote Expeditions,10.16
+sample_058,sample_058,5,1,2018,1/5/2018,18:00,21:00,Paradise Harbour,-64.912,-62.862,Quixote Expeditions,2.71
+sample_016,sample_016,6,1,2018,1/6/2018,9:30,12:30,Cuverville Island,-64.671,-62.611,G Adventures,10.16
+sample_059,sample_059,6,1,2018,1/6/2018,16:15,19:15,Paradise Harbour,-64.912,-62.862,G Adventures,6.43
+sample_006,sample_006,7,1,2018,1/7/2018,12:00,15:00,Cierva Cove,-64.156,-60.873,,
+sample_066,sample_066,7,1,2018,1/7/2018,16:00,19:00,Petermann Island,-65.173,-64.116,G Adventures,8.47
+sample_071,sample_071,7,1,2018,1/7/2018,14:10,17:10,Wilhelmina Bay,-64.642,-62.16,Quixote Expeditions,9.48
+sample_083,sample_083,9,1,2018,1/9/2018,14:00,17:00,Enterprise Island,-64.539,-61.98,Quixote Expeditions,6.77
+sample_007,sample_007,10,1,2018,1/10/2018,12:00,15:00,Cierva Cove,-64.156,-60.873,Polar Latitudes,
+sample_045,sample_045,11,1,2018,1/11/2018,18:23,21:23,Neko Harbour,-64.851,-62.542,Lindblad Expeditions,5.42
+sample_076,sample_076,15,1,2018,1/15/2018,12:00,15:00,Wilhelmina Bay,-64.642,-62.16,,
+sample_080,sample_080,15,1,2018,1/15/2018,12:00,15:00,Brown Bluff,-63.52,-56.873,,
+sample_082,sample_082,15,1,2018,1/15/2018,19:06,22:06,Dallman Bay,-64.65,-63.15,Lindblad Expeditions,9.48
+sample_075,sample_075,18,1,2018,1/18/2018,9:45,12:45,Enterprise Island,-64.539,-61.98,Quixote Expeditions,12.19
+sample_017,sample_017,19,1,2018,1/19/2018,17:20,20:20,Cuverville Island,-64.671,-62.611,Quixote Expeditions,16.25
+sample_072,sample_072,19,1,2018,1/19/2018,13:35,16:35,Wilhelmina Bay,-64.642,-62.16,Quixote Expeditions,17.61
+sample_027,sample_027,20,1,2018,1/20/2018,14:10,17:10,Danco Island,-64.746,-62.622,Quixote Expeditions,17.61
+sample_046,sample_046,20,1,2018,1/20/2018,12:00,15:00,Neko Harbour,-64.851,-62.542,Polar Latitudes,
+sample_018,sample_018,21,1,2018,1/21/2018,12:00,15:00,Cuverville Island,-64.671,-62.611,Polar Latitudes,
+sample_008,sample_008,22,1,2018,1/22/2018,12:00,15:00,Cierva Cove,-64.156,-60.873,Polar Latitudes,
+sample_081,sample_081,30,1,2018,1/30/2018,16:16,19:16,Brown Bluff,-63.52,-56.873,Hanse Explorer,12.12
+sample_009,sample_009,3,2,2018,2/3/2018,16:25,19:25,Cierva Cove,-64.156,-60.873,Hanse Explorer,13.61
+sample_028,sample_028,3,2,2018,2/3/2018,9:12,12:12,Danco Island,-64.746,-62.622,G Adventures,18.29
+sample_060,sample_060,5,2,2018,2/5/2018,10:00,13:00,Paradise Harbour,-64.912,-62.862,G Adventures,14.90
+sample_029,sample_029,6,2,2018,2/6/2018,14:10,17:10,Danco Island,-64.746,-62.622,Hanse Explorer,7.63
+sample_053,sample_053,6,2,2018,2/6/2018,17:00,20:00,Orne Harbour,-64.638,-62.534,Hanse Explorer,
+sample_030,sample_030,12,2,2018,2/12/2018,9:15,12:15,Danco Island,-64.746,-62.622,G Adventures,18.01
+sample_061,sample_061,12,2,2018,2/12/2018,14:50,17:50,Paradise Harbour,-64.912,-62.862,G Adventures,11.92
+sample_084,sample_084,15,2,2018,2/15/2018,17:55,20:55,Enterprise Island,-64.539,-61.98,Quixote Expeditions,12.19
+sample_085,sample_085,15,2,2018,2/15/2018,14:30,17:30,Stonington Island,-68.186,-66.997,G Adventures,7.86
+sample_019,sample_019,16,2,2018,2/16/2018,10:50,13:50,Cuverville Island,-64.671,-62.611,Polar Latitudes,12.99
+sample_047,sample_047,16,2,2018,2/16/2018,17:17,20:17,Neko Harbour,-64.851,-62.542,Polar Latitudes,12.98
+sample_073,sample_073,17,2,2018,2/17/2018,11:13,14:13,Wilhelmina Bay,-64.642,-62.16,Quixote Expeditions,14.90
+sample_031,sample_031,18,2,2018,2/18/2018,12:19,15:19,Danco Island,-64.746,-62.622,Quixote Expeditions,12.87
+sample_062,sample_062,18,2,2018,2/18/2018,19:28,22:28,Paradise Harbour,-64.912,-62.862,Quixote Expeditions,10.84
+sample_086,sample_086,19,2,2018,2/19/2018,12:00,15:00,Stonington Island,-68.186,-66.997,,
+sample_048,sample_048,20,2,2018,2/20/2018,17:46,20:46,Neko Harbour,-64.851,-62.542,Lindblad Expeditions,14.90
+sample_087,sample_087,28,2,2018,2/28/2018,9:09,12:09,Stonington Island,-68.186,-66.997,G Adventures,5.42
+sample_067,sample_067,1,3,2018,3/1/2018,15:57,18:57,Petermann Island,-65.173,-64.116,G Adventures,7.04
+sample_020,sample_020,2,3,2018,3/2/2018,9:35,12:35,Cuverville Island,-64.671,-62.611,Polar Latitudes,12.68
+sample_063,sample_063,3,3,2018,3/3/2018,9:25,12:25,Paradise Harbour,-64.912,-62.862,Polar Latitudes,10.97
+sample_068,sample_068,9,3,2018,3/9/2018,15:06,18:06,Petermann Island,-65.173,-64.116,G Adventures,5.42
+sample_049,sample_049,10,3,2018,3/10/2018,14:20,17:20,Neko Harbour,-64.851,-62.542,G Adventures,7.31
+sample_064,sample_064,10,3,2018,3/10/2018,9:30,12:30,Paradise Harbour,-64.912,-62.862,G Adventures,4.06
+sample_021,sample_021,11,3,2018,3/11/2018,9:00,12:00,Cuverville Island,-64.671,-62.611,G Adventures,14.49
+sample_022,sample_022,17,3,2018,3/17/2018,14:20,17:20,Cuverville Island,-64.671,-62.611,G Adventures,11.99
+sample_050,sample_050,17,3,2018,3/17/2018,9:00,12:00,Neko Harbour,-64.851,-62.542,G Adventures,
+sample_069,sample_069,18,3,2018,3/18/2018,14:40,17:40,Petermann Island,-65.173,-64.116,G Adventures,6.50
+sample_129,sample_129,11,11,2018,11/11/2018,12:07,15:07,Orne Harbour,-64.638,-62.534,Hurtigruten Expeditions,22.29
+sample_093,sample_093,12,11,2018,11/12/2018,16:04,19:04,Cuverville Island,-64.671,-62.611,Hurtigruten Expeditions,
+sample_094,sample_094,22,11,2018,11/22/2018,11:24,14:24,Cuverville Island,-64.671,-62.611,Hurtigruten Expeditions,15.31
+sample_095,sample_095,28,11,2018,11/28/2018,9:36,12:36,Cuverville Island,-64.671,-62.611,Polar Latitudes,19.37
+sample_096,sample_096,5,12,2018,12/5/2018,17:13,20:13,Cuverville Island,-64.671,-62.611,Hurtigruten Expeditions,17.74
+sample_088,sample_088,8,12,2018,12/8/2018,8:31,11:31,Cierva Cove,-64.156,-60.873,G Adventures,10.16
+sample_112,sample_112,8,12,2018,12/8/2018,16:00,19:00,Cierva Cove,-64.156,-60.873,Polar Latitudes,10.84
+sample_114,sample_114,9,12,2018,12/9/2018,8:45,11:45,Neko Harbour,-64.851,-62.542,G Adventures,13.98
+sample_136,sample_136,9,12,2018,12/9/2018,15:32,18:32,Paradise Harbour,-64.912,-62.862,G Adventures,10.97
+sample_097,sample_097,10,12,2018,12/10/2018,10:36,13:36,Cuverville Island,-64.671,-62.611,Polar Latitudes,16.25
+sample_130,sample_130,10,12,2018,12/10/2018,15:26,18:26,Orne Harbour,-64.638,-62.534,Polar Latitudes,13.07
+sample_106,sample_106,13,12,2018,12/13/2018,15:41,18:41,Danco Island,-64.746,-62.622,Polar Latitudes,11.92
+sample_115,sample_115,14,12,2018,12/14/2018,9:10,12:10,Neko Harbour,-64.851,-62.542,Polar Latitudes,8.26
+sample_131,sample_131,15,12,2018,12/15/2018,15:28,18:28,Orne Harbour,-64.638,-62.534,Polar Latitudes,12.87
+sample_107,sample_107,16,12,2018,12/16/2018,8:50,11:50,Danco Island,-64.746,-62.622,G Adventures,9.39
+sample_116,sample_116,16,12,2018,12/16/2018,14:26,17:26,Neko Harbour,-64.851,-62.542,G Adventures,9.29
+sample_098,sample_098,24,12,2018,12/24/2018,16:28,19:28,Cuverville Island,-64.671,-62.611,Polar Latitudes,11.92
+sample_099,sample_099,25,12,2018,12/25/2018,8:46,11:46,Cuverville Island,-64.671,-62.611,G Adventures,12.18
+sample_132,sample_132,25,12,2018,12/25/2018,15:40,18:40,Orne Harbour,-64.638,-62.534,Polar Latitudes,14.90
+sample_138,sample_138,25,12,2018,12/25/2018,15:08,18:08,Paradise Harbour,-64.912,-62.862,G Adventures,6.04
+sample_139,sample_139,26,12,2018,12/26/2018,11:46,14:46,Paradise Harbour,-64.912,-62.862,Quixote Expeditions,13.54
+sample_117,sample_117,28,12,2018,12/28/2018,14:37,17:37,Neko Harbour,-64.851,-62.542,G Adventures,11.92
+sample_144,sample_144,31,12,2018,12/31/2018,15:38,18:38,Wilhelmina Bay,-64.642,-62.16,Hurtigruten Expeditions,15.03
+sample_148,sample_148,6,1,2019,1/6/2019,18:05,21:05,Enterprise Island,-64.539,-61.98,Quixote Expeditions,12.54
+sample_118,sample_118,9,1,2019,1/9/2019,19:20,22:20,Neko Harbour,-64.851,-62.542,Hurtigruten,5.66
+sample_149,sample_149,11,1,2019,1/11/2019,15:20,18:20,Enterprise Island,-64.539,-61.98,Hurtigruten Expeditions,9.79
+sample_150,sample_150,12,1,2019,1/12/2019,9:32,12:32,Enterprise Island,-64.539,-61.98,Quixote Expeditions,12.19
+sample_145,sample_145,18,1,2019,1/18/2019,15:12,18:12,Wilhelmina Bay,-64.642,-62.16,Hurtigruten Expeditions,11.01
+sample_089,sample_089,19,1,2019,1/19/2019,10:42,13:42,Cierva Cove,-64.156,-60.873,Polar Latitudes,
+sample_100,sample_100,19,1,2019,1/19/2019,18:55,21:55,Cuverville Island,-64.671,-62.611,Quixote Expeditions,5.15
+sample_108,sample_108,19,1,2019,1/19/2019,11:00,14:00,Danco Island,-64.746,-62.622,Hurtigruten Expeditions,8.68
+sample_119,sample_119,21,1,2019,1/21/2019,9:29,12:29,Neko Harbour,-64.851,-62.542,Antarctica21,10.84
+sample_146,sample_146,21,1,2019,1/21/2019,16:00,19:00,Wilhelmina Bay,-64.642,-62.16,Antarctica21,7.45
+sample_159,sample_159,22,1,2019,1/22/2019,18:54,21:54,Petermann Island,-65.173,-64.116,Quixote Expeditions,5.82
+sample_101,sample_101,26,1,2019,1/26/2019,14:35,17:35,Cuverville Island,-64.671,-62.611,G Adventures,12.41
+sample_109,sample_109,26,1,2019,1/26/2019,9:05,12:05,Danco Island,-64.746,-62.622,G Adventures,8.89
+sample_158,sample_158,26,1,2019,1/26/2019,9:30,12:30,Pleneau Bay,-65.089,-64.046,Antarctica21,6.77
+sample_120,sample_120,27,1,2019,1/27/2019,8:50,11:50,Neko Harbour,-64.851,-62.542,G Adventures,9.56
+sample_121,sample_121,27,1,2019,1/27/2019,14:48,17:48,Neko Harbour,-64.851,-62.542,Antarctica21,11.51
+sample_140,sample_140,27,1,2019,1/27/2019,11:45,14:45,Paradise Harbour,-64.912,-62.862,Antarctica21,7.45
+sample_151,sample_151,28,1,2019,1/28/2019,16:40,19:40,Enterprise Island,-64.539,-61.98,Antarctica21,11.51
+sample_154,sample_154,28,1,2019,1/28/2019,11:30,14:30,Brown Bluff,-63.52,-56.873,Hurtigruten Expeditions,28.17
+sample_152,sample_152,1,2,2019,2/1/2019,13:06,16:06,Enterprise Island,-64.539,-61.98,Quixote Expeditions,9.07
+sample_155,sample_155,1,2,2019,2/1/2019,10:00,13:00,Eden Rocks,-63.495,-55.702,Antarctica21,25.73
+sample_102,sample_102,2,2,2019,2/2/2019,14:22,17:22,Cuverville Island,-64.671,-62.611,Quixote Expeditions,13.00
+sample_103,sample_103,3,2,2019,2/3/2019,8:48,11:48,Cuverville Island,-64.671,-62.611,G Adventures,10.33
+sample_122,sample_122,3,2,2019,2/3/2019,14:55,17:55,Neko Harbour,-64.851,-62.542,G Adventures,12.14
+sample_156,sample_156,3,2,2019,2/3/2019,16:03,19:03,Halfmoon Island,-62.595,-59.974,Antarctica21,9.48
+sample_160,sample_160,3,2,2019,2/3/2019,14:39,17:39,Petermann Island,-65.173,-64.116,Quixote Expeditions,2.71
+sample_141,sample_141,5,2,2019,2/5/2019,10:46,13:46,Paradise Harbour,-64.912,-62.862,Polar Latitudes,9.48
+sample_133,sample_133,10,2,2019,2/10/2019,9:54,12:54,Orne Harbour,-64.638,-62.534,Polar Latitudes,8.94
+sample_143,sample_143,11,2,2019,2/11/2019,17:00,20:00,Paradise Harbour,-64.912,-62.862,Hurtigruten Expeditions,9.41
+sample_110,sample_110,12,2,2019,2/12/2019,8:53,11:53,Danco Island,-64.746,-62.622,G Adventures,12.54
+sample_123,sample_123,12,2,2019,2/12/2019,15:00,18:00,Neko Harbour,-64.851,-62.542,G Adventures,9.16
+sample_124,sample_124,15,2,2019,2/15/2019,10:27,13:27,Neko Harbour,-64.851,-62.542,Polar Latitudes,10.97
+sample_161,sample_161,17,2,2019,2/17/2019,15:25,18:25,Petermann Island,-65.173,-64.116,G Adventures,
+sample_090,sample_090,18,2,2019,2/18/2019,16:15,19:15,Cierva Cove,-64.156,-60.873,Polar Latitudes,15.58
+sample_111,sample_111,19,2,2019,2/19/2019,17:06,20:06,Danco Island,-64.746,-62.622,Hurtigruten Expeditions,16.12
+sample_091,sample_091,20,2,2019,2/20/2019,18:55,21:55,Cierva Cove,-64.156,-60.873,Cheesemans Safaris,
+sample_125,sample_125,20,2,2019,2/20/2019,16:09,19:09,Neko Harbour,-64.851,-62.542,Polar Latitudes,18.96
+sample_157,sample_157,20,2,2019,2/20/2019,10:45,13:45,Mikkelson Harbour,-63.896,-60.776,Antarctica21,20.18
+sample_104,sample_104,21,2,2019,2/21/2019,16:15,19:15,Cuverville Island,-64.671,-62.611,Cheesemans Safaris,10.16
+sample_147,sample_147,21,2,2019,2/21/2019,9:58,12:58,Wilhelmina Bay,-64.642,-62.16,Cheesemans Safaris,9.21
+sample_134,sample_134,22,2,2019,2/22/2019,8:47,11:47,Orne Harbour,-64.638,-62.534,Cheesemans Safaris,11.24
+sample_142,sample_142,24,2,2019,2/24/2019,17:56,20:56,Paradise Harbour,-64.912,-62.862,Cheesemans Safaris,9.48
+sample_135,sample_135,25,2,2019,2/25/2019,12:00,15:00,Orne Harbour,-64.638,-62.534,Polar Latitudes,
+sample_153,sample_153,25,2,2019,2/25/2019,14:35,17:35,Enterprise Island,-64.539,-61.98,Cheesemans Safaris,10.84
+sample_113,sample_113,26,2,2019,2/26/2019,17:57,20:57,Danco Island,-64.746,-62.622,Cheesemans,14.22
+sample_092,sample_092,27,2,2019,2/27/2019,15:00,18:00,Cierva Cove,-64.156,-60.873,Polar Latitudes,
+sample_162,sample_162,28,2,2019,2/28/2019,10:15,13:15,Petermann Island,-65.173,-64.116,Cheesemans Safaris,12.19
+sample_164,sample_164,5,3,2019,3/5/2019,13:00,16:00,Neko Harbour,-64.851,-62.542,Belgica 121,11.65
+sample_105,sample_105,6,3,2019,3/6/2019,15:40,18:40,Cuverville Island,-64.671,-62.611,Polar Latitudes,14.90
+sample_165,sample_165,7,3,2019,3/7/2019,12:15,15:15,Andvord Bay Transect Station 1 Useful,-64.725,-62.858,Belgica 121,13.14
+sample_126,sample_126,8,3,2019,3/8/2019,16:43,19:43,Neko Harbour,-64.851,-62.542,Polar Latitudes,17.20
+sample_127,sample_127,10,3,2019,3/10/2019,14:26,17:26,Neko Harbour,-64.851,-62.542,G Adventures,15.67
+sample_166,sample_166,10,3,2019,3/10/2019,9:00,12:00,Paradise Harbour,-64.912,-62.862,Belgica 121,10.29
+sample_163,sample_163,11,3,2019,3/11/2019,15:50,18:50,Petermann Island,-65.173,-64.116,G Adventures,8.26
+sample_167,sample_167,13,3,2019,3/13/2019,18:30,21:30,Petermann Island,-65.173,-64.116,Belgica 121,
+sample_128,sample_128,19,3,2019,3/19/2019,8:44,11:44,Neko Harbour,-64.851,-62.542,G Adventures,15.73
+sample_200,sample_200,6,11,2019,11/6/2019,15:46,18:46,Yankee Harbour,-62.524,-59.778,Hurtigruten Expeditions,13.82
+sample_198,sample_198,7,11,2019,11/7/2019,17:27,20:27,Wilhelmina Bay,-64.642,-62.16,Hurtigruten Expeditions,21.87
+sample_187,sample_187,8,11,2019,11/8/2019,9:30,12:30,Orne Harbour,-64.638,-62.534,Hurtigruten Expeditions,17.6
+sample_188,sample_188,8,11,2019,11/8/2019,10:25,13:25,Orne Harbour,-64.638,-62.534,Hurtigruten Expeditions,17.6
+sample_189,sample_189,8,11,2019,11/8/2019,14:15,17:15,Orne Harbour,-64.638,-62.534,Hurtigruten Expeditions,
+sample_175,sample_175,9,11,2019,11/9/2019,9:45,12:45,Halfmoon Island,-62.595,-59.974,Hurtigruten Expeditions,9.075
+sample_176,sample_176,16,11,2019,11/16/2019,9:50,12:50,Halfmoon Island,-62.595,-59.974,Hurtigruten Expeditions,
+sample_190,sample_190,17,11,2019,11/17/2019,1:12,4:12,Orne Harbour,-64.638,-62.534,Hurtigruten Expeditions,14.90
+ManifestSample_115,ManifestSample_115,4,12,2019,12/4/2019,19:40,22:40,Danco Island,-64.746,-62.622,Hurtigruten Expeditions,
+sample_172,sample_172,5,12,2019,12/5/2019,15:50,18:50,Cuverville Island,-64.671,-62.611,Antarctica21,12.87
+ManifestSample_045,ManifestSample_045,10,12,2019,12/10/2019,10:50,13:50,Paradise Harbour,-64.912,-62.862,Antarctica21,9.346
+sample_179,sample_179,12,12,2019,12/12/2019,9:08,12:08,Maxwell Bay,-62.223,-58.859,Antarctica21,8.67
+sample_180,sample_180,13,12,2019,12/13/2019,16:00,19:00,Vega Island,-63.833,-57.366,Antarctica21,4.740616368
+sample_173,sample_173,15,12,2019,12/15/2019,16:20,19:20,Cuverville Island,-64.671,-62.611,Antarctica21,
+sample_184,sample_184,15,12,2019,12/15/2019,9:48,12:48,Andvord Bay Transect Station 4 Neko,-64.849,-62.539,Antarctica21,8.30
+sample_185,sample_185,15,12,2019,12/15/2019,11:30,14:30,Andvord Bay Transect Station 5 Interior,-64.8717217,-62.5721324,Antarctica21,6.10
+sample_183,sample_183,15,12,2019,12/15/2019,12:32,15:32,Andvord Bay Transect Station 3 Middle,-64.808,-62.672,Antarctica21,6.77
+sample_182,sample_182,15,12,2019,12/15/2019,13:15,16:15,Andvord Bay Transect Station 2 Errera,-64.81,-62.67,Antarctica21,7.99
+sample_181,sample_181,15,12,2019,12/15/2019,13:50,16:50,Andvord Bay Transect Station 1 Useful,-64.725,-62.858,Antarctica21,10.16
+sample_170,sample_170,18,12,2019,12/18/2019,17:15,20:15,Cierva Cove,-64.156,-60.873,Antarctica21,10.70
+sample_195,sample_195,19,12,2019,12/19/2019,10:00,13:00,Petermann Island,-65.173,-64.116,Antarctica21,12.05
+sample_137,sample_137,20,12,2019,12/20/2019,12:00,15:00,Paradise Harbour,-64.912,-62.862,Polar Latitudes,
+sample_186,sample_186,20,12,2019,12/20/2019,9:52,12:52,Neko Harbour,-64.851,-62.542,Antarctica21,
+sample_191,sample_191,20,12,2019,12/20/2019,15:35,18:35,Orne Harbour,-64.638,-62.534,Antarctica21,8.94
+ManifestSample_116,ManifestSample_116,21,12,2019,12/21/2019,14:12,17:12,Danco Island,-64.746,-62.622,Hurtigruten Expeditions,
+sample_169,sample_169,24,12,2019,12/24/2019,17:00,20:00,Charlotte Bay,-64.583,-61.633,Antarctica21,7.18
+sample_192,sample_192,25,12,2019,12/25/2019,10:00,13:00,Paradise Harbour,-64.912,-62.862,Antarctica21,2.71
+ManifestSample_117,ManifestSample_117,1,1,2020,1/1/2020,12:00,15:00,Danco Island,-64.746,-62.622,,
+ManifestSample_118,ManifestSample_118,2,1,2020,1/2/2020,17:45,20:45,Orne Harbour,-64.638,-62.534,Hurtigruten Expeditions,
+ManifestSample_119,ManifestSample_119,16,1,2020,1/16/2020,14:25,17:25,Halfmoon Island,-62.595,-59.974,Hurtigruten Expeditions,
+ManifestSample_120,ManifestSample_120,19,1,2020,1/19/2020,16:00,19:00,Orne Harbour,-64.638,-62.534,Hurtigruten Expeditions,
+sample_196,sample_196,20,1,2020,1/20/2020,14:30,17:30,Petermann Island,-65.173,-64.116,Antarctica21,12.05
+sample_174,sample_174,21,1,2020,1/21/2020,17:15,20:15,Danco Island,-64.746,-62.622,Antarctica21,15.96
+sample_193,sample_193,21,1,2020,1/21/2020,10:12,13:12,Paradise Harbour,-64.912,-62.862,Antarctica21,7.31
+sample_168,sample_168,26,1,2020,1/26/2020,20:15,23:15,Brown Bluff,-63.52,-56.873,Antarctica21,20.32
+sample_178,sample_178,26,1,2020,1/26/2020,15:00,18:00,Kinnes Cove,-63.316,-56.466,Antarctica21,20.99
+sample_177,sample_177,27,1,2020,1/27/2020,9:50,12:50,Heroina Island,-63.423,-54.692,Antarctica21,15.85
+sample_199,sample_199,30,1,2020,1/30/2020,16:00,19:00,Wilhelmina Bay,-64.642,-62.16,Antarctica21,14.87
+sample_194,sample_194,31,1,2020,1/31/2020,16:30,19:30,Paradise Harbour,-64.912,-62.862,Antarctica21,9.35
+ManifestSample_121,ManifestSample_121,31,1,2020,1/31/2020,16:00,19:00,Halfmoon Island,-62.595,-59.974,Hurtigruten Expeditions,
+ManifestSample_122,ManifestSample_122,2,2,2020,2/2/2020,13:18,16:18,Brown Bluff,-63.52,-56.873,Hurtigruten Expeditions,
+sample_197,sample_197,4,2,2020,2/4/2020,11:00,14:00,Petermann Island,-65.173,-64.116,Antarctica21,10.92
+ManifestSample_123,ManifestSample_123,4,2,2020,2/4/2020,15:00,18:00,Danco Island,-64.746,-62.622,Hurtigruten Expeditions,
+ManifestSample_124,ManifestSample_124,5,2,2020,2/5/2020,14:55,17:55,Petermann Island,-65.173,-64.116,Hurtigruten Expeditions,
+ManifestSample_125,ManifestSample_125,5,2,2020,2/5/2020,16:28,19:28,Petermann Island,-65.173,-64.116,Hurtigruten Expeditions,
+ManifestSample_001,ManifestSample_001,6,2,2020,2/6/2020,17:00,20:00,Cierva Cove,-64.156,-60.873,Polar Latitudes,
+ManifestSample_002,ManifestSample_002,7,2,2020,2/7/2020,11:29,14:29,Cuverville Island,-64.671,-62.611,Polar Latitudes,16.93077274
+ManifestSample_003,ManifestSample_003,7,2,2020,2/7/2020,17:25,20:25,Neko Harbour,-64.851,-62.542,Polar Latitudes,
+ManifestSample_004,ManifestSample_004,20,2,2020,2/20/2020,10:25,13:25,Orne Harbour,-64.638,-62.534,Polar Latitudes,5.35
+ManifestSample_126,ManifestSample_126,6,3,2020,3/6/2020,19:00,22:00,Stonington Island,-68.186,-66.997,Hurtigruten Expeditions,
+ManifestSample_127,ManifestSample_127,7,3,2020,3/7/2020,12:30,15:30,Horshoe Island,-67.836,-67.189,Hurtigruten Expeditions,
+ManifestSample_005,ManifestSample_005,10,3,2020,3/10/2020,8:18,11:18,Orne Harbour,-64.638,-62.534,Polar Latitudes,12.87
+sample_171,sample_171,19,12,2020,12/19/2019,15:30,18:30,Cierva Cove,-64.156,-60.873,Antarctica21,
+ManifestSample_128,ManifestSample_128,28,11,2021,11/28/2021,15:44,18:44,Horshoe Island,-67.836,-67.189,Hurtigruten Expeditions,
+ManifestSample_129,ManifestSample_129,29,11,2021,11/29/2021,15:30,18:30,Orne Harbour,-64.638,-62.534,Hurtigruten Expeditions,18.96
+ManifestSample_046,ManifestSample_046,8,12,2021,12/8/2021,9:15,12:15,Neko Harbour,-64.851,-62.542,Polar Latitudes,10.43
+ManifestSample_047,ManifestSample_047,9,12,2021,12/9/2021,10:00,13:00,Neko Harbour,-64.851,-62.542,Antarctica21,
+ManifestSample_048,ManifestSample_048,9,12,2021,12/9/2021,15:48,18:48,Cuverville Island,-64.671,-62.611,Antarctica21,
+ManifestSample_049,ManifestSample_049,14,12,2021,12/14/2021,10:05,13:05,Neko Harbour,-64.851,-62.542,Antarctica21,
+ManifestSample_050,ManifestSample_050,14,12,2021,12/14/2021,15:30,18:30,Danco Island,-64.746,-62.622,Antarctica21,
+ManifestSample_051,ManifestSample_051,15,12,2021,12/15/2021,15:00,18:00,Fournier Bay,-64.533,-63.15,Antarctica21,
+ManifestSample_130,ManifestSample_130,16,12,2021,12/16/2021,12:00,15:00,Brown Bluff,-63.52,-56.873,,
+ManifestSample_131,ManifestSample_131,17,12,2021,12/17/2021,16:24,19:24,Neko Harbour,-64.851,-62.542,Hurtigruten Expeditions,11.24
+ManifestSample_052,ManifestSample_052,18,12,2021,12/18/2021,10:35,13:35,Danco Island,-64.746,-62.622,Polar Latitudes,
+ManifestSample_053,ManifestSample_053,18,12,2021,12/18/2021,16:00,19:00,Portal Point,-64.502,-61.756,Antarctica21,
+ManifestSample_054,ManifestSample_054,20,12,2021,12/20/2021,10:00,13:00,Neko Harbour,-64.851,-62.542,Antarctica21,
+ManifestSample_055,ManifestSample_055,20,12,2021,12/20/2021,15:40,18:40,Cuverville Island,-64.671,-62.611,Antarctica21,
+ManifestSample_056,ManifestSample_056,24,12,2021,12/24/2021,16:06,19:06,Orne Harbour,-64.638,-62.534,Antarctica21,
+ManifestSample_057,ManifestSample_057,25,12,2021,12/25/2021,9:45,12:45,Danco Island,-64.746,-62.622,Antarctica21,
+ManifestSample_058,ManifestSample_058,27,12,2021,12/27/2021,8:15,11:15,Cuverville Island,-64.671,-62.611,Polar Latitudes,13.14
+ManifestSample_059,ManifestSample_059,27,12,2021,12/27/2021,16:15,19:15,Paradise Harbour,-64.912,-62.862,Polar Latitudes,13.41
+ManifestSample_060,ManifestSample_060,28,12,2021,12/28/2021,20:30,23:30,Brown Bluff,-63.52,-56.873,Antarctica21,
+ManifestSample_061,ManifestSample_061,29,12,2021,12/29/2021,9:35,12:35,Whalers Bay,-62.983,-60.562,Polar Latitudes,5.69
+ManifestSample_062,ManifestSample_062,29,12,2021,12/29/2021,10:05,13:05,Heroina Island,-63.423,-54.692,Antarctica21,
+ManifestSample_063,ManifestSample_063,31,12,2021,12/31/2021,15:35,18:35,Kinnes Cove,-63.316,-56.466,Antarctica21,
+ManifestSample_064,ManifestSample_064,2,1,2022,1/2/2022,15:09,18:09,Mikkelsen Harbour,-63.896,-60.776,Antarctica21,
+ManifestSample_065,ManifestSample_065,3,1,2022,1/3/2022,9:00,12:00,Fournier Bay,-64.533,-63.15,Antarctica21,
+ManifestSample_066,ManifestSample_066,3,1,2022,1/3/2022,15:15,18:15,Orne Harbour,-64.638,-62.534,Antarctica21,
+ManifestSample_068,ManifestSample_068,4,1,2022,1/4/2022,15:00,18:00,Danco Island,-64.746,-62.622,Antarctica21,
+ManifestSample_069,ManifestSample_069,9,1,2022,1/9/2022,15:30,18:30,Petermann Island,-65.173,-64.116,Quixote Expeditions,
+ManifestSample_132,ManifestSample_132,20,1,2022,1/20/2022,12:00,15:00,Petermann Island,-65.173,-64.116,,
+ManifestSample_070,ManifestSample_070,22,1,2022,1/22/2022,12:15,15:15,Danco Island,-64.746,-62.622,Quixote Expeditions,
+ManifestSample_071,ManifestSample_071,25,1,2022,1/25/2022,12:10,15:10,Mikkelsen Harbour,-63.896,-60.776,Quixote Expeditions,10.56
+ManifestSample_072,ManifestSample_072,10,2,2022,2/10/2022,18:40,21:40,Maxwell Bay,-62.223,-58.859,Quixote Expeditions,5.15
+ManifestSample_133,ManifestSample_133,22,2,2022,2/22/2022,15:40,18:40,Paradise Harbour,-64.912,-62.862,Hurtigruten Expeditions,17.81
+ManifestSample_134,ManifestSample_134,24,2,2022,2/24/2022,12:00,15:00,Cuverville Island,-64.671,-62.611,,
+ManifestSample_135,ManifestSample_135,8,3,2022,3/8/2022,14:58,17:58,Petermann Island,-65.173,-64.116,Hurtigruten Expeditions,15.31
+ManifestSample_073,ManifestSample_073,11,3,2022,3/11/2022,14:40,17:40,Fournier Bay,-64.533,-63.15,,
+ManifestSample_074,ManifestSample_074,12,3,2022,3/12/2022,9:00,12:00,Damoy Point,-64.82,-63.52,Viking Octantis,
+ManifestSample_075,ManifestSample_075,13,3,2022,3/13/2022,11:03,14:03,Detaille Island,-66.87,-66.79,Viking Octantis,
+ManifestSample_076,ManifestSample_076,14,3,2022,3/14/2022,14:10,17:10,Pleaneau Island,-65.089,-64.046,Viking Octantis,11.96
+ManifestSample_077,ManifestSample_077,15,3,2022,3/15/2022,8:45,11:45,Paradise Harbour,-64.912,-62.862,Viking Octantis,
+ManifestSample_078,ManifestSample_078,15,3,2022,3/15/2022,14:53,17:53,Cuverville Island,-64.671,-62.611,Viking Octantis,9.75
+ManifestSample_079,ManifestSample_079,16,3,2022,3/16/2022,10:20,13:20,Danco Island,-64.746,-62.622,Viking Octantis,15.81
+ManifestSample_080,ManifestSample_080,16,3,2022,3/16/2022,16:30,19:30,Orne Harbour,-64.638,-62.534,Viking Octantis,
+ManifestSample_081,ManifestSample_081,16,3,2022,3/16/2022,12:20,15:20,Gerlache Front Ferrybox,,,Viking Octantis,
+ManifestSample_082,ManifestSample_082,16,3,2022,3/16/2022,12:48,15:48,Gerlache Front Ferrybox,,,Viking Octantis,
+ManifestSample_083,ManifestSample_083,16,3,2022,3/16/2022,18:40,21:40,Gerlache Front Ferrybox,,,Viking Octantis,
+ManifestSample_006,ManifestSample_006,18,3,2022,3/18/2022,12:00,15:00,Peltier Channel,-64.854,-63.495,Aurora Expeditions,6.1
+ManifestSample_007,ManifestSample_007,21,3,2022,3/21/2022,10:05,13:05,Paradise Harbour,-64.912,-62.862,Aurora Expeditions,6.5
+ManifestSample_136,ManifestSample_136,22,3,2022,3/22/2022,10:30,13:30,Paradise Harbour,-64.912,-62.862,Hurtigruten Expeditions,12.19
+ManifestSample_008,ManifestSample_008,22,3,2022,3/22/2022,12:00,15:00,Damoy Point,-64.82,-63.52,Aurora Expeditions,7.04
+ManifestSample_009,ManifestSample_009,22,3,2022,3/22/2022,12:00,15:00,Neko Harbour,-64.851,-62.542,Aurora Expeditions,14.22
+ManifestSample_137,ManifestSample_137,23,3,2022,3/23/2022,12:00,15:00,Cuverville Island,-64.671,-62.611,Hurtigruten Expeditions,16.25
+ManifestSample_067,ManifestSample_067,1,4,2022,4/1/2022,9:45,12:45,Cuverville Island,-64.671,-62.611,Antarctica21,
