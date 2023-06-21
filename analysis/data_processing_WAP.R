@@ -3,12 +3,13 @@ library(lubridate)
 
 ###if you wanna clear and start over rm(list=ls())
 
-# data processing file
+# data processing file. I'm reading in the asv_tables and the metadata manifest files. 
+#make sure the metadata manifest files match and are cleaned. makes this easier.
+#below, in the code, I export these merged files and do more cleaning in excel to re-import a clean spreadsheet
 
 # all metadata 2017-2020 samples 1-200 in a submission during 2020
 
 meta_2020_1_200 <- read.csv("data/metadata/2020_pool_18S.csv")
-
 #meta_2020_1_200 <- meta_1_200 %>% filter(sample.id != "")
 #is that code above needed? 
 
@@ -30,9 +31,9 @@ meta_2022_extra <- meta_2022_extra %>% filter(project_name == "WAP")
 
 #no need to change dates, did it in original file
 #meta_19_22_extra$date <-dmy(meta_19_22_extra$date)
+#THIS BITES ME IN TH BUTT LATER THO 
 
-
-# LOAD IN DATA
+# LOAD IN DATA ASV TABLE
 
 # 17-18
 
@@ -153,7 +154,7 @@ meta_2022_extra <- meta_2022_extra[,c(1, 7:12)]
 colnames(meta_2022_extra) <- c("sample_id","Date","Time","Site_Name","Lat","Long","Operator")
 
 metadata <- bind_rows(meta_2020_1_200, meta_2022_1_190, meta_2022_extra)
-#why is line 201 - 426 missing SO MUCH DATA?? 
+#why is line 201 - 426 missing SO MUCH DATA?? why so many NAs? 
 
 #check the site names as they're all OVER THE PLACE, label as desired
 
@@ -204,10 +205,21 @@ sites <- metadata %>% group_by(Site_Name) %>%
 metadata$Lat <- sites$Lat[match(metadata$Site_Name,sites$Site_Name)]
 metadata$Long <- sites$Long[match(metadata$Site_Name,sites$Site_Name)]
 
+unique(metadata$Date) #so many ugly things in this metadata
 
-#save my lat long problem then save this file this will be a new file and use code load("data/WAP_clean.Rdata")
-save(asv_table,taxa_table,metadata, file = "data/WAP_clean.Rdata")
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#CLEAN THE FINAL METADATA and add Zeu 
+#write the metadata file and download, open in excel, fix shit, reload, and resave
+write.csv(metadata, file = "data/metadata/metadatafix.csv")
+#open in excel and save as excel file, then add Zeu, and resave as csv and import
+#IMPORT THIS fixed file is now called: if i need to make further changes, open the excel file and change nad resave to csv
+metadata<-read.csv("data/metadata/metadatafix_fixed.csv")
+#why are there so many extra x columns added, wtf? 
 
+#then save this file this will be a new file and use code load("data/WAP_clean.Rdata")
+save(asv_table,taxa_table, metadata, file = "data/WAP_clean.Rdata")
 
-
+load("data/WAP_clean.Rdata")
+#THE HOLY GRAIL ASV table, Taxa table, metadata (w Zeu)
+#NEVER HAVE TO PROCESS DATA AGAIN!!!! not true
 
