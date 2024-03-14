@@ -5,7 +5,7 @@ packages <- c(
   "cluster", "NbClust", "pheatmap", "fantaxtic", "phyloseq",
   "tidyverse", "magrittr", "ggnested", "knitr", "kableExtra",
   "gridExtra", "ggrepel", "sf", "ggh4x", "ggmagnify",
-  "cowplot", "rstatix", "ggpubr")
+  "cowplot", "rstatix", "ggpubr", "mapproj")
 
 
 funlist <-  lapply(packages, function(x) {
@@ -19,8 +19,8 @@ funlist <-  lapply(packages, function(x) {
 options(max.print = 100)
 
 #where to deposit figures made
-figures_home <- "~/Documents/Fjord_Phyto/FjordPhyto/figures/"
-data_home <- "~/Documents/Fjord_Phyto/FjordPhyto/data/"
+figures_home <- "~/Documents/GitHub/FjordPhyto/figures/"
+data_home <- "~/Documents/GitHub/FjordPhyto/data/"
 
 ## Colors and labels ---
 region_colors <- c("red4", "green4", "blue", "purple")
@@ -46,7 +46,7 @@ names(group_colors) <- c("Cryptophytes", "Diatoms", "Dinoflagellates", "Haptophy
 
 
 # load in data from data_processing_w_cleanmeta_rerunqiime.R
-load("~/Documents/Fjord_Phyto/FjordPhyto/data/WAP_set_meta_rerun.Rdata") #see the README file for how this was re-created
+load("~/Documents/GitHub/FjordPhyto/data/WAP_set_meta_rerun.Rdata") #see the README file for how this was re-created
 #or 
 #source("Data/data_processing_w_cleanmeta_rerunqiime.R")
 
