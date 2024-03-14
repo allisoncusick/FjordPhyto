@@ -831,9 +831,6 @@ ggsave(
 )
 
 
-
-
-
 ## Fig. 5
 phyto_asvs <- unique(taxa_table_split_2$Feature.ID[!is.na(taxa_table_split_2$phytogroups)])
 april_sample <- metadata$samples[metadata$month == 4]
@@ -858,15 +855,14 @@ bio <- pivot_wider(
 bio_remove <-  bio[,apply(bio, 2, function(r){!all(r == 0)})]
 #colnames(bio_remove) <- gsub("__", "_", gsub("X","", colnames(bio_remove)))
 
-bio_distmat1 <- vegdist(bio_remove, binary=FALSE, method = "bray")
+#bio_distmat1 <- vegdist(t(bio_remove), binary=FALSE, method = "bray")
 
-spellman.cor <- bio_remove  %>% 
-  cor(use="pairwise.complete.obs")
+spearman.cor <- bio_remove  %>% 
+  cor(use="pairwise.complete.obs", method = "spearman")
 
-spellman.dist <- as.dist(1 - spellman.cor)
+spearman.cor <- as.dist(1 - spearman.cor)
 
-bio_NMS1 <-  metaMDS(spellman.dist,
-                     distance = "bray",
+bio_NMS1 <-  metaMDS(spearman.cor,
                      k = 2,
                      maxit = 200, 
                      trymax = 100,
@@ -881,52 +877,11 @@ bio_NMS1 <-  metaMDS(spellman.dist,
 data_scores_1 <- as.data.frame(scores(bio_NMS1$points)) %>%
   rownames_to_column(var = "Species") 
 
-hc1 <- hclust(spellman.dist, method = "ward.D")
+hc1 <- hclust(spearman.cor, method = "ward.D2")
+
 plot(hc1, cex = 0.6, hang = -1)
 rect.hclust(hc1, k = 3, border = 2:10)
 groups <- cutree(hc1, k = 3)
-
-
-correlation_matrix <- cor(bio_remove, method = "spearman")
-hierarchical_result <- hclust(dist(1 - correlation_matrix), method = "ward.D2", members = ,)
-hierarchical_result_col <- hclust(dist(correlation_matrix), method = "ward.D2", members = ,)
-clusters <- cutree(hierarchical_result, k = 3)
-
-myannotation <- as.data.frame(cutree(hierarchical_result, k = 3))
-names(myannotation)[1] = "Partition" 
-myannotation$Partition <- factor(myannotation$Partition, levels= 1:3, 
-                               labels=LETTERS[1:3])
-
-partitions_df <- as.data.frame(myannotation)
-partitions_df$Species <- rownames(partitions_df)
-
-sample_cluster_df <- subset_bio %>%
-  mutate(clusters = factor(samples, levels = names(groups), labels = groups)) %>%
-  left_join(., metadata, by = "samples", keep = F) %>%
-  left_join(.,taxa_table_split_2, by = c("Feature.ID", "Species")) %>%
-  left_join(., df_return , by = "samples") %>%
-  drop_na(Site_Name_2, phytogroups) %>%
-  left_join(., partitions_df, by = "Species") %>%
-  filter(reads > 0)
-
-
-ann_colors <- list(Partition = partition_colors)
-
-fig_5 <- pheatmap(correlation_matrix,
-                  main = "Species Co-occurrence Matrix (Spearman's Correlation)",
-                  fontsize_row = 6, fontsize_col = 6,clustering_method = "ward.D2",
-                  cutree_rows = 3, cutree_cols = 3,
-                  legend_breaks =seq(-1, 1, length.out=5),
-                  annotation_col=myannotation, annotation_colors=ann_colors)
-
-ggsave(
-  filename = paste0(figures_home, "spearman-rank.jpg"),
-  fig_5,
-  width = 10.1,
-  height = 9.1,
-  units = "in",
-  dpi = 300)
-
 
 nmds_clust <- ggplot(data_scores_1) + 
   geom_point(aes(x = MDS1, y = MDS2,
@@ -948,6 +903,44 @@ nmds_clust <- ggplot(data_scores_1) +
 nmds_clust
 
 
+myannotation <- as.data.frame(cutree(hc1, k = 3))
+names(myannotation)[1] = "Cluster" 
+myannotation$Cluster <- factor(myannotation$Cluster, levels= 1:3, 
+                               labels=1:3)
+
+cluster_df <- as.data.frame(myannotation)
+cluster_df$Species <- rownames(cluster_df)
+
+sample_cluster_df <- subset_bio %>%
+  left_join(., metadata, by = "samples", keep = F) %>%
+  left_join(.,taxa_table_split_2, by = c("Feature.ID", "Species")) %>%
+  left_join(., df_return , by = "samples") %>%
+  drop_na(Site_Name_2, phytogroups) %>%
+  left_join(., cluster_df, by = "Species") %>%
+  filter(reads > 0)
+
+
+ann_colors <- list(Cluster = cluster_colors)
+
+fig_5 <- pheatmap(bio_remove  %>% 
+                    cor(use="pairwise.complete.obs", method = "spearman"),
+                  main = "Species Co-occurrence Matrix (Spearman's Correlation)",
+                  fontsize_row = 6, fontsize_col = 6,clustering_method = "ward.D2",
+                  cutree_rows = 3, cutree_cols = 3,
+                  legend_breaks =seq(-1, 1, length.out=5),
+                  annotation_col=myannotation, annotation_colors=ann_colors)
+
+ggsave(
+  filename = paste0(figures_home, "spearman-rank.jpg"),
+  fig_5,
+  width = 10.1,
+  height = 9.1,
+  units = "in",
+  dpi = 300)
+
+
+
+
 
 #### Rethinking partitions -- related them back to samples -----
 
@@ -960,10 +953,10 @@ sample_cluster_df$days_since <- days_since
 day_since_df <- sample_cluster_df %>%
   group_by(samples) %>%
   mutate(total_reads = sum(reads)) %>%
-  group_by(samples, Genus) %>%
+  group_by(samples, Cluster) %>%
   mutate(prop_reads = sum(reads)/total_reads) %>%
   #filter(Species %in% c("Phaeocystis_sp.", "Porosira_sp.","Geminigera_cryophila","Dino-Group-I-Clade-1_X_sp.")) %>% 
-  group_by(Genus, season, region) %>%
+  group_by(Cluster, Species, season, region) %>%
   reframe(sd = sqrt(sum(prop_reads*(days_since - days_since[which.max(prop_reads)])^2)/
                       (((length(prop_reads>0)-1)/length(prop_reads))*sum(prop_reads))),
           day_max = days_since[which.max(prop_reads)]) %>%
@@ -971,13 +964,13 @@ day_since_df <- sample_cluster_df %>%
 
 days_order <- day_since_df %>%
   filter(season == "2017-2018")  %>%
-  arrange(desc(day_max)) %>% pull(Genus)
+  arrange(desc(day_max)) %>% pull(Species)
 day_since_df %>%
-  mutate(Genus = factor(Genus, levels = c(unique(day_since_df$Genus)[!unique(day_since_df$Genus) %in% days_order], unique(days_order)))) %>%
+  mutate(Species = factor(Species, levels = c(unique(day_since_df$Species)[!unique(day_since_df$Species) %in% days_order], unique(days_order)))) %>%
 ggplot() +
-  geom_point(aes(y = Genus, x = day_max, color = season)) +
-  geom_errorbarh(aes(y = Genus, xmin = day_max-sd, xmax = day_max+sd, color = season)) +
-  facet_wrap(~region) +
+  geom_point(aes(y = Species, x = day_max, color = season)) +
+  geom_errorbarh(aes(y = Species, xmin = day_max-sd, xmax = day_max+sd, color = season)) +
+  facet_wrap(Cluster~region) +
   scale_color_manual(name = "", values = c("black", "blue", "green4", "red")) +
   theme(axis.text.y = element_text(size = 6))
   
@@ -1059,25 +1052,26 @@ asvs_wide_df[is.na(asvs_wide_df)]
 in_biom <- otu_table(asvs_wide_df, taxa_are_rows = T)
 taxa_names(in_biom) <- asvs_wide$Feature.ID
 #Make sample_data
-in_biom_metadata <- sample_data(left_join(data_scores_1, metadata, by = "samples") %>%
-                                  drop_na(month) %>%
-                                  mutate(clusters = factor(
-                                    samples, levels = names(groups), labels = groups)))
+# in_biom_metadata <- sample_data(left_join(data_scores_1, metadata, by = "samples") %>%
+#                                   drop_na(month) %>%
+#                                   mutate(clusters = factor(
+#                                     samples, levels = names(groups), labels = groups)))
+# in_biom_metadata <- sample_data(metadata)
 sample_names(in_biom_metadata) <- in_biom_metadata$samples
 
 
 #Make tax_table
-taxatable <- taxa_table_split_2
-in_biom_tax <- tax_table(taxatable[,c(2:7, 11, 8:9)])
+taxatable <- left_join(taxa_table_split_2, cluster_df, by = "Species") %>% drop_na(Cluster)
+in_biom_tax <- tax_table(taxatable[,c(2:7, 11:12, 8:9)])
 taxa_names(in_biom_tax) <- taxatable$Feature.ID
-colnames(in_biom_tax) <- colnames(taxatable[,c(2:7, 11, 8:9)])
+colnames(in_biom_tax) <- colnames(taxatable[,c(2:7, 11:12, 8:9)])
 
 phylo_fjordphyto <- merge_phyloseq(in_biom, in_biom_tax, in_biom_metadata)
 top_nested <- nested_top_taxa(phylo_fjordphyto,
-                              top_tax_level = "phytogroups",
+                              top_tax_level = "Clusters",
                               nested_tax_level = "Species",
                               n_top_taxa = 7, 
-                              n_nested_taxa = 5, grouping = "clusters")
+                              n_nested_taxa = 5)
 
 
 top_asv <- top_taxa(phylo_fjordphyto, n_taxa = 10, grouping = "clusters",
