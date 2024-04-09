@@ -840,6 +840,7 @@ subset_bio <- subset(asv_table_filter,
                        samples != april_sample &
                        Feature.ID %in% phyto_asvs)
 
+
 taxa_ids <- taxa_table_split_2 %>%
   select(Species,Feature.ID) %>% distinct()
 
@@ -919,6 +920,13 @@ sample_cluster_df <- subset_bio %>%
   left_join(., cluster_df, by = "Species") %>%
   filter(reads > 0)
 
+myannotation <- as.data.frame(cutree(hc1, k = 3))
+names(myannotation)[1] = "Cluster" 
+myannotation$Cluster <- factor(myannotation$Cluster, levels= 1:3, 
+                               labels=1:3)
+
+cluster_df <- as.data.frame(myannotation)
+cluster_df$Species <- rownames(cluster_df)
 
 ann_colors <- list(Cluster = cluster_colors)
 
@@ -939,24 +947,24 @@ ggsave(
   dpi = 300)
 
 
-
-
-
 #### Rethinking partitions -- related them back to samples -----
 
+#### X number of sites -----
+
+
 ### Days since "start of the season" -> Nov. 1
-days_since <- yday(sample_cluster_df$Date) - yday("2000-11-01")
+days_since <- yday(full_df$Date) - yday("2000-11-01")
 days_since[days_since < 0] <- days_since[days_since < 0] + 365
 
-sample_cluster_df$days_since <- days_since
+full_df$days_since <- days_since
 #"Porosira_sp.","Geminigera_cryophila","Dino-Group-I-Clade-1_X_sp."
-day_since_df <- sample_cluster_df %>%
+day_since_df <- full_df %>%
   group_by(samples) %>%
-  mutate(total_reads = sum(reads)) %>%
-  group_by(samples, Cluster) %>%
-  mutate(prop_reads = sum(reads)/total_reads) %>%
+  mutate(total_reads = sum(Abundance)) %>%
+  group_by(samples) %>%
+  mutate(prop_reads = sum(Abundance)/total_reads) %>%
   #filter(Species %in% c("Phaeocystis_sp.", "Porosira_sp.","Geminigera_cryophila","Dino-Group-I-Clade-1_X_sp.")) %>% 
-  group_by(Cluster, Species, season, region) %>%
+  group_by(Species, season, region) %>%
   reframe(sd = sqrt(sum(prop_reads*(days_since - days_since[which.max(prop_reads)])^2)/
                       (((length(prop_reads>0)-1)/length(prop_reads))*sum(prop_reads))),
           day_max = days_since[which.max(prop_reads)]) %>%
@@ -970,7 +978,8 @@ day_since_df %>%
 ggplot() +
   geom_point(aes(y = Species, x = day_max, color = season)) +
   geom_errorbarh(aes(y = Species, xmin = day_max-sd, xmax = day_max+sd, color = season)) +
-  facet_wrap(Cluster~region) +
+  labs(x = "Days since start of season") +
+  facet_wrap(~region) +
   scale_color_manual(name = "", values = c("black", "blue", "green4", "red")) +
   theme(axis.text.y = element_text(size = 6))
   
@@ -996,14 +1005,195 @@ sample_cluster_df %>%
   scale_y_log10() +
   scale_color_manual(values = group_colors)
 
+sample_cluster_df %>%
+  filter(reads > 0) %>%
+  group_by(phytogroups) %>%
+  group_map(~{
+    .x %>%
+      group_by(Genus) %>%
+      group_map(~{
+        if (length(unique(.x$Species)) > 1){
+          .x %>%
+            ggplot() +
+            geom_point(aes(x = days_since, y = log10(reads), color = Species),
+                       alpha = 1/5, show.legend = T) +
+            geom_smooth(aes(x = days_since, y = log10(reads),
+                            group = Species, color = Species),
+                        method = "gam", formula = y ~ poly(x,6),
+                        show.legend = F, se = F) +
+            facet_wrap(~Genus) +
+            scale_x_continuous(name = "Days since start of season",
+                               limits = c(0,140)) +
+            scale_y_continuous(name = bquote(log[10]~reads)) +
+            scale_color_discrete(name = unique(.x$Genus)) +
+            theme_bw() +
+            theme(strip.background = element_blank(),
+                  strip.text = element_text(face = "bold"),
+                  legend.position = c(0.2,0.8),
+                  legend.text = element_text(size = 8),
+                  legend.margin = margin(0,0,0,0, unit = "pt")) +
+            guides(color = guide_legend(override.aes = list(alpha = 1)))
+        }else{
+          .x %>%
+            ggplot() +
+            geom_point(aes(x = days_since, y = log10(reads)), color = "black",
+                       show.legend = T, alpha = 1/5) +
+            geom_smooth(aes(x = days_since, y = log10(reads),
+                            group = Species, color = Species), color = "black",
+                        method = "gam", formula = y ~ poly(x,6),
+                        show.legend = F, se = F) +
+            facet_wrap(~Genus) +
+            scale_x_continuous(name = "Days since start of season",
+                               limits = c(0,140)) +
+            scale_y_continuous(name = bquote(log[10]~reads)) +
+            scale_color_discrete(name = "") +
+            theme_bw() +
+            theme(strip.background = element_blank(),
+                  strip.text = element_text(face = "bold"),
+                  legend.position = c(0.2,0.8),
+                  legend.text = element_text(size = 8),
+                  legend.margin = margin(0,0,0,0, unit = "pt"))
+        }
+      }, .keep = T) %>%
+    wrap_plots(., guides = "collect")}, .keep = T)
+
 
 sample_cluster_df %>%
-  filter(phytogroups == "Diatoms") %>%
-  mutate(succesion_period = case_when())
+  pivot_longer(c(richness_phytogroups, evenness_phytogroups, shannon_phytogroups)) %>%
+  mutate(name = factor(name,
+                       levels = c("richness_phytogroups", "evenness_phytogroups",
+                                  "shannon_phytogroups"),
+                       labels = c("Species richness",
+                                  "Species evenness",
+                                  "Shannon diversity index"))) %>%
   ggplot() +
-  geom_point(aes(x = days_since, y = reads)) +
-  geom_smooth(aes(x = days_since, y = reads, color = Genus, group = Genus), method = "loess", show.legend = F, se = F) 
+  geom_point(aes(x = days_since, y = value, color = season)) +
+  geom_smooth(aes(x = days_since, y = value, color = season,
+                  group = season), method = "gam") +
+  facet_wrap(~name, scales = "free_y")
 
+### Change in diversity ----
+
+sample_cluster_df %>%
+  pivot_longer(c(richness_phytogroups, evenness_phytogroups, shannon_phytogroups)) %>%
+  group_by(name, season) %>%
+  group_map(~{
+    
+  })
+
+for (i in 2:length(unique(sample_cluster_df$days_since))){
+  
+}
+  
+
+do.call("rbind",sample_cluster_df %>%
+  arrange(Date) %>%
+  group_by(season) %>%
+  group_map(~{
+    .x %>%
+      distinct(samples, .keep_all = T) %>%
+      mutate(
+        time.difference = Date - lag(Date),
+        richness.diff = richness_phytogroups - lag(richness_phytogroups),
+        shannon.diff = shannon_phytogroups - lag(shannon_phytogroups),
+        evenness.diff = evenness_phytogroups - lag(evenness_phytogroups)) 
+  }, .keep = T)) %>%
+  pivot_longer(c(richness.diff, evenness.diff, shannon.diff)) %>%
+  ggplot() +
+  geom_point(aes(x = days_since, y = value, color = season)) +
+  geom_smooth(aes(x = days_since, y = value, color = season)) +
+  facet_wrap(~name, scales = "free_y")
+  
+sample_cluster_df %>%
+  mutate(period = factor(case_when(days_since < 50 ~ "Early",
+                             days_since >=50 & days_since <= 100 ~ "Middle",
+                             days_since > 100 ~ "Late"),
+                         levels = c("Early", "Middle", "Late"))) %>%
+  pivot_longer(c(richness_phytogroups, evenness_phytogroups, shannon_phytogroups)) %>%
+ggplot() +
+  geom_boxplot(aes(x = period, y = value, fill = season)) +
+  facet_wrap(~name, scales = "free_y", ncol = 1)
+  
+sample_cluster_df %>%
+  pivot_longer(c(richness_phytogroups, evenness_phytogroups, shannon_phytogroups)) %>%
+  ggplot() +
+  geom_point(aes(x = days_since, y = value, color = season)) +
+  facet_wrap(~name, scales = "free_y", ncol = 1)
+
+
+sample_cluster_df %>%
+  filter(!is.na(phytogroups)) %>%
+  group_by(samples) %>%
+  mutate(sample.reads = sum(reads, na.rm = T)) %>%
+  ungroup() %>%
+  mutate(rel_reads = reads/sample.reads) %>%
+  ggplot() +
+  geom_point(aes(x = days_since, y = log10(reads), color = phytogroups)) +
+  stat_smooth(aes(x = days_since, y = log10(reads), color = phytogroups),
+              method = "gam", formula = y ~ poly(x, 6)) +
+  facet_wrap(~season, scales = "free_y", ncol = 1)
+
+# max_min <- data.frame(
+# Biology = c(20, 0), Physics = c(20, 0), Maths = c(20, 0),
+# Sport = c(20, 0), English = c(20, 0), Geography = c(20, 0),
+# Art = c(20, 0), Programming = c(20, 0), Music = c(20, 0)
+# )
+# rownames(max_min) <- c("Max", "Min")
+# 
+# # Bind the variable ranges to the data
+# df <- rbind(max_min, exam_scores)
+
+sample_cluster_df %>%
+  mutate(period = factor(case_when(days_since < 50 ~ "Early",
+                                   days_since >=50 & days_since <= 100 ~ "Middle",
+                                   days_since > 100 ~ "Late"),
+                         levels = c("Early", "Middle", "Late"))) %>%
+  filter(reads > 5) %>%
+  group_by(season) %>%
+  group_map(~{
+    .x %>%
+  select(period, phytogroups, reads) %>%
+  group_by(period) %>%
+  mutate(period.reads = sum(reads)) %>%
+  group_by(phytogroups, period) %>%
+  mutate(group_reads = sum(reads)) %>%
+  ungroup() %>%
+  mutate(rel_reads = group_reads/period.reads) %>%
+  distinct(period, phytogroups, rel_reads) %>%
+  pivot_wider(id_cols = phytogroups, names_from = period, values_from = rel_reads) %>%
+  ggradar(.)}) %>%
+  wrap_plots(., guides = "collect")
+
+
+  
+min_max_df <- as_tibble(t(radio.plot.df %>%
+  group_by(phytogroups) %>%
+  reframe(max = max(rel_reads),
+          min = min(rel_reads))))
+colnames(min_max_df) <- min_max_df[1,]
+min_max_df <- min_max_df[-1,]
+min_max_df$period = c("max", "min")
+
+rbind(min_max_df, radio.plot.df %>%
+  pivot_wider(id_cols = period, names_from = phytogroups, values_from = rel_reads)) %>%
+  relocate(period,
+           before = Cryptophytes)
+
+devtools::install_github("ricardo-bion/ggradar", dependencies=TRUE)
+library(ggradar)
+
+rbind(min_max_df, radio.plot.df %>%
+        pivot_wider(id_cols = period, names_from = phytogroups, values_from = rel_reads)) %>%
+  relocate(period,
+           before = Cryptophytes)
+
+
+
+  ggplot(data = ., aes(x = variable, y = value)) +
+  geom_polygon(aes(group = period, color = ph), fill="#3232ff", size = 1, alpha=0.2) +
+  geom_line(aes(group = type, color = type), size = 1) +
+  coord_radar()
+  
 
 ### Do the cluster/ groups be the same? idk why not?
 left_join(partitions_df, cluster_groups, by = "Species")
