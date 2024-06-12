@@ -51,7 +51,7 @@ asv_table_17_18 <- asv_table_17_18 %>% pivot_longer(-Feature.ID, names_to = "sam
 
 asv_table_18_19 <- read.csv("data/asv_count_tax1819.csv")
 
-asv_table_18_19 <- asv_table_18_19 %>% filter(pr2_Confidence > 0.97)
+asv_table_18_19 <- asv_table_18_19  %>% filter(pr2_Confidence > 0.97)
 
 colnames(asv_table_18_19)
 taxa_18_19 <- asv_table_18_19[,c(1,82,83)]
@@ -63,7 +63,7 @@ asv_table_18_19 <- asv_table_18_19 %>% pivot_longer(-Feature.ID, names_to = "sam
 
 asv_table_19_20 <- read.csv("data/asv_count_tax1920.csv")
 
-asv_table_19_20 <- asv_table_19_20 %>% filter(Confidence > 0.97)
+asv_table_19_20 <- asv_table_19_20  %>% filter(Confidence > 0.97)
 
 colnames(asv_table_19_20)
 taxa_19_20 <- asv_table_19_20[,c(1,35,36)]
@@ -79,12 +79,12 @@ colnames(asv_table_20_22)
 
 taxa_20_22 <- read.csv("data/pr2_taxonomy_2022_seq.csv")
 
-taxa_20_22 <- taxa_20_22 %>% filter(Confidence > 0.97)
+taxa_20_22 <- taxa_20_22  %>% filter(Confidence > 0.97)
 
 asv_table_20_22 <- asv_table_20_22 %>% pivot_longer(-Feature.ID, names_to = "samples", values_to = "reads")
 
 asv_table_20_22 <- asv_table_20_22 %>% filter(Feature.ID %in% taxa_20_22$Feature.ID)
-
+ 
 # filter this table to just WAP samples
 
 asv_table_20_22$samples <- gsub("^([^_]*_[^_]*)_.*$", "\\1", asv_table_20_22$samples)
@@ -103,7 +103,7 @@ taxa_20_22_extra <- read.csv("data/pr2_taxonomy_2022_10_18_p1_18S.csv")
 
 asv_table_20_22_extra <- asv_table_20_22_extra %>% pivot_longer(-Feature.ID, names_to = "samples", values_to = "reads")
 
-taxa_20_22_extra <- taxa_20_22_extra %>% filter(Confidence > 0.97)
+taxa_20_22_extra <- taxa_20_22_extra  %>% filter(Confidence > 0.97)
 colnames(asv_table_20_22_extra)
 
 asv_table_20_22_extra <- asv_table_20_22_extra %>% filter(Feature.ID %in% taxa_20_22_extra$Feature.ID)
@@ -162,6 +162,14 @@ metadata$Site_Name <- str_to_title(metadata$Site_Name)
 metadata$Site_Name
 #seems ok except the lines 201 - 426 missing 
 #i think the code below isn't needed any longer cuz I changed them all in the original file ... 
+
+# #New dino
+# new_dino <- asv_table %>% filter(Feature.ID == "82de9b71a3c330b514ed4e731ca12a0d")
+# new_dino_join <- left_join(
+#   left_join(new_dino, metadata, c("samples" = "sample_id")), taxa_table, "Feature.ID")
+# 
+# write.csv(new_dino_join, file = "data/metadata_82de9b71a3c330b514ed4e731ca12a0d.csv")
+
 
 #metadata$Site_Name[which(metadata$Site_Name == "Danco")] <- "Danco Island"
 #metadata$Site_Name[which(metadata$Site_Name == "Cuverville")] <- "Cuverville Island"

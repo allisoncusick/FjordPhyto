@@ -1,10 +1,3 @@
-scale_discrete_manual_ext <- function(aesthetics, values, name, labels)
-{
-  lapply(aesthetics, function(aesthetic) {
-    ggplot2::scale_discrete_manual(aesthetic, values = values[[aesthetic]], name = name, labels = labels, drop = F)
-  })
-}
-
 ggnested_pattern <- function (data, mapping = aes(), ...,
                        legend_labeling = c("sub", "join", "main"),
                        join_str = " - ", legend_title = NULL,
@@ -13,6 +6,12 @@ ggnested_pattern <- function (data, mapping = aes(), ...,
                        main_palette = NULL, 
                        base_clr = "#008CF0") 
 {
+  scale_discrete_manual_ext <- function(aesthetics, values, name, labels)
+  {
+    lapply(aesthetics, function(aesthetic) {
+      ggplot2::scale_discrete_manual(aesthetic, values = values[[aesthetic]], name = name, labels = labels, drop = F)
+    })
+  }
   aes_args <- names(mapping)
   if (!"main_group" %in% aes_args) {
     stop("Error: provide the main_group in the aesthetic mapping argument. For non-nested data, use the regular ggplot2 function.")

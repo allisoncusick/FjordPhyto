@@ -155,9 +155,17 @@ species.filter <- full_df %>%
 full_df_filter <- full_df %>%
   filter(reads > 0 & region == "middle")
 
+### Frequencys --
+full_df %>%
+  group_by(Site_Name_2, season) %>%
+  reframe(t_s = length(unique(samples))) %>%
+  ggplot() +
+  geom_density(aes(x = t_s, y = ..count.., color = season, group = season)) 
+
+
 
 #### Run the assemblages ----
-bio <- full_df_filter %>%
+bio <- full_df %>%
   select(Feature.ID, Species, reads, samples) %>%
   pivot_wider(.,
   id_cols = "samples", names_from = "Species", values_from = "reads", values_fn = function(r)sum(r,na.rm = T), values_fill = 0) %>%
@@ -195,7 +203,6 @@ bio_NMS1 <-  metaMDS(dist(1 - correlation_matrix),
                      autotransform = FALSE,
                      na.rm = T)
 
-ordiplot(bio_NMS1, cex = 0.3)
 
 data_scores_1 <- as.data.frame(scores(bio_NMS1$points)) %>%
   rownames_to_column(var = "Species") 
@@ -336,7 +343,7 @@ phytogroup_labels <- c("Cryptophytes", "Diatoms",
 names(phytogroup_labels) <- unique(combined_df$phytogroups)
 
 
-  mini_combined <- combined_df %>%
+mini_combined <- combined_df %>%
      group_by(phytogroups, Genus, Species, season) %>%
     distinct(day_max, sd)
   

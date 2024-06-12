@@ -235,14 +235,29 @@ heatmap_time <- full_df %>%
         strip.text.y = element_text(angle = 0, hjust = 0),
         strip.clip = "off")
 
+
+### Add facet_tags 
+png(filename = paste0(figures_local, "heatmap_species-month_relabun-all-label.png"),
+     width = 11,
+     height = 10,
+     units = "in",
+     res = 300)
+tag_facet_manual(heatmap_time, t_adjust= 8)
+dev.off()
+
+### Move groups over?? 
+
+
 ggsave(
-  filename = paste0(figures_local, "heatmap_species-month_relabun-all.jpg"),
-  heatmap_time,
+  filename = paste0(figures_local, "heatmap_species-month_relabun-all-label.png"),
+  heatmap_time_label,
   width = 11,
   height = 11,
   units = "in",
   dpi = 300
 )
+
+
 #####  Diversity map by region -----
 
 plot_list <- full_df %>%
@@ -750,21 +765,22 @@ ggsave(filename = paste0(figures_local, "cluster_regions.jpg"),
 
 cluster_time <- add_cluster %>%
   drop_na(groups) %>%
-  group_by(season, days_since, Site_Name_2) %>%
+  group_by(samples) %>%
   mutate(sample_sum = sum(reads, na.rm = T)) %>%
-  group_by(season, days_since, Site_Name_2, groups) %>%
+  group_by(season, days_since, site_ids, groups) %>%
   reframe(clust_rel = sum(reads, na.rm = T)/sample_sum) %>%
   distinct() %>%
   ggplot() + 
-  geom_point(aes(x = days_since, y = as.numeric(clust_rel), color = factor(groups)), alpha = 1/2) +
-  geom_smooth(aes(x = days_since, y = as.numeric(clust_rel), color = factor(groups)),
+  geom_point(aes(x = as.numeric(site_ids), y = as.numeric(clust_rel), color = factor(groups)), stat = "identity") +
+  geom_smooth(aes(x = as.numeric(site_ids), y = as.numeric(clust_rel), color = factor(groups)),
              show.legend = F, method = "loess", alpha = 1/5) +
   facet_grid(~season) +
   my_theme +
-  theme(legend.position = c(0.12, 0.95),
-        legend.direction = "horizontal",
-        legend.background = element_rect(color = "black")) +
-  labs(x = "Days since start of season") +
+  coord_flip() +
+  theme(legend.position = c(0.9, 0.9),
+        legend.background = element_rect(color = "black"),
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+  scale_x_continuous(name = "", breaks = 1:32, labels = levels(add_cluster$Site_Name_2)) +
   scale_y_continuous(name = "Proportion of reads", limits = c(0,1.15)) +
   scale_color_manual(name = "Cluster", values = cluster_colors,
                      guide = guide_legend(override.aes = list(alpha = 1)))
@@ -777,8 +793,9 @@ ggsave(filename = paste0(figures_local, "cluster_time.jpg"),
        units = "in",
        dpi = 300)
 
+table1 <- full_df %>% filter(season %in% c("2017-2018", "2018-2019") & phytogroups == "Diatoms") %>% distinct(Feature.ID, Species, Genus, Family, Order, Class, Division, Supergroup, Kingdom)
 
-
+write_csv(table1, file = "~/Desktop/diatom-2017-2019.csv")
 
 #sp_order_plot
 plot.periods <- data.frame(xmin = c(0, 51, 100), xmax = c(50, 100, 140), ymax = Inf, ymin = -Inf, period = c("Early","Mid","Late"))
