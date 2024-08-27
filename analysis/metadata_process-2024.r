@@ -2,7 +2,7 @@
 # Takes in the metadata file and processes it to output "metadata" data frame
 
 # Load Libraries ----
-packages <- c("tidyverse", "dplyr", "tidyr", "readxl")
+packages <- c("tidyverse", "dplyr", "tidyr", "readxl", "geosphere")
 
 
 funlist <-  lapply(packages, function(x) {
@@ -45,35 +45,46 @@ metadata <- metadata_raw %>%
                 as.numeric(year) - 1, "-", as.numeric(year)),
             season == "spring" ~ paste0(
                 as.numeric(year), "-", as.numeric(year) + 1)),
-        region = case_when(
-            latitude < -63 & latitude > -66 ~ "middle",
-            latitude < -66 & latitude > -73 ~ "southern",
-            longitude < -50 & longitude > -58 ~ "northern",
-            TRUE ~ "shetlands")) %>%
-    drop_na(longitude, latitude) %>%
-    filter(location != "")
+          days_since = yday(date_local) - yday("2000-11-01"),
+          days_since = ifelse(days_since < 0, days_since + 365, days_since)) %>%
+    drop_na(longitude, latitude)
+
+metadata$region <-"shetlands"
+metadata$region[
+  which(metadata$latitude < -63 & metadata$latitude > -66)] <-"middle"
+metadata$region[
+  which(metadata$latitude < -66 & metadata$latitude > -73)] <-"southern"
+metadata$region[
+  which(metadata$longitude < -50 & metadata$longitude > -58)] <-"northern"
+
+dist_vec <- matrix(ncol = 2, nrow = length(unique(metadata$location)))
+for (r in 1:length(unique(metadata$location))) {
+  lon1 <- unique(metadata$longitude[metadata$location == "Stonington Island"])
+  lat1 <- unique(metadata$latitude[metadata$location == "Stonington Island"])
+  lon2 <- mean(unique(metadata$longitude[metadata$location == unique(metadata$location)[r]]))
+  lat2 <- mean(unique(metadata$latitude[metadata$location == unique(metadata$location)[r]]))
+  dist_vec[r,2] <- distm(c(lon1, lat1), c(lon2, lat2), fun = distHaversine)
+  dist_vec[r,1] <- unique(metadata$location)[r]
+}
+
+dist_df <- arrange(as.data.frame(dist_vec), V2) %>%
+  mutate(site_num = 1:nrow(dist_vec))
+colnames(dist_df) <- c("location", "distance_to_stonington", "site_num")
+
+metadata$site_ids <- factor(metadata$location, levels = dist_df$location, labels = dist_df$site_num)
+
+metadata$land_dist_km <- dist2land(metadata[,c("latitude", "longitude")], bind = F)
 
 # Metadata Output ----
 save(metadata, file = paste0("data/metadata/fjord_phyto_processed-", todays_date, ".Rdata"))
+
+
 ## Load CTD Data
-ctd_load <- read_csv("data/ctd_rbr/outputclean.csv")
+ctd_load <- read_csv("data/ctd_rbr/ctdfjorder_data_20240728212609_nik.csv")
 colnames(ctd_load) <- gsub(" ", "_", colnames(ctd_load))
 colnames(ctd_load) <- gsub("\\(.*?\\)", "", colnames(ctd_load))
+colnames(ctd_load) <- gsub("-", "", colnames(ctd_load))
 
-## Make a simple data frame with all the CTD files and their corresponding ID
-ctd_to_ID <- metadata %>%
-  select(UNIQUE_ID_CODE, CTD_cast_file_name) %>%
-  separate(CTD_cast_file_name, into = c("CTD1", "CTD2", "CTD3"), sep = ",") %>%
-  #mutate_at(vars(CTD1, CTD2, CTD3), sub, pattern = "CC", replacement = "") %>%
-  mutate_at(
-    vars(CTD1, CTD2, CTD3), sub, pattern = "\\..*", replacement = "") %>%
-  pivot_longer(cols = c(CTD1, CTD2, CTD3),
-  names_to = "CTD", values_to = "CTD_file_name") %>%
-  select(-CTD) %>%
-  drop_na(CTD_file_name)
-
-
-#write_csv(ctd_to_ID, "data/ctd_rbr/CTD_ID-list.csv")
 ### Figure out which variables are raw values (i.e. measured with depth and time) versus computed values (i.e. one value for each CTD run)
 unique_keys <- ctd_load %>% 
   mutate(date = as_date(timestamp)) |> 
@@ -85,70 +96,23 @@ unique_keys <- ctd_load %>%
 ctd_rows <- ctd_load |> 
   mutate(date = as_date(timestamp)) |> 
   group_by_at(unique_keys) %>%
-  reframe(across(everything(), ~list(.x)))
+  reframe(across(everything(), ~list(.x))) %>%
+  rename_with(~paste0(.x, "_ctd"), 
+              all_of(names(ctd_load)[names(ctd_load) %in% names(metadata)])) %>%
+  drop_na(Surface_Salinity_) %>%
+  filter(Profile_ID == 0) %>%
+  distinct(Unique_ID, .keep_all = TRUE)
+
 # Now we know there are 294 unique CTD files
 
-# Add in the UNIQUE_ID_CODE using the simple data frame we made above
-ctd_w_id <- left_join(ctd_to_ID, ctd_rows, by = c("CTD_file_name" = "filename")) %>%
-filter(!is.na(UNIQUE_ID_CODE) & !is.na(latitude)) %>%
-distinct(UNIQUE_ID_CODE, .keep_all = T)
-# There were 27 UNIQUE ID CODES that have a CTD file associated with them
+metadata_w_samples <- left_join(ctd_rows, metadata,
+                                by = c("Unique_ID" = "UNIQUE_ID_CODE")) %>%
+  filter(!is.na(Genetics_18sv9_Sample_ID) &
+         longitude != 0 & !is.na(time_local)) 
 
-## Load chl_a data 
-find_files <- list.files("data/Chla_Rick/Chla_TimeSeries/", pattern = "*.csv")
-chl_load <- do.call("rbind", lapply(find_files,function(r){
-  read_csv(paste0("data/Chla_Rick/Chla_TimeSeries/", r))[-1,]
-}))
-chl_load$time <- as_date(chl_load$time)
-
-## Pull unique ID codes, Dates, lat/lon, and secchi depths
-subset_meta <- metadata %>%
-  mutate(Date = as_date(date_local)) %>%
-  group_by(UNIQUE_ID_CODE, Date, latitude, longitude) %>%
-  group_keys()
-
-## Add the metadata to the chla file by date
-meta_w_chl <- left_join(subset_meta, chl_load, by = join_by(Date == time))
-
-## The resolution of the latitude and longitude in the metadata is higher than in the chla
-## file, so we need to find the closest latitude and longitude in the metadata to the chla file
-## Steps: Calculate the aboslute difference between the lats and lons in each data set, group by
-## the unique ID code, time, and secchi depth, arrange by the differences, and filter by the first
-## row of each group
-meta_match_chla <- meta_w_chl %>%
-  mutate(diff_lat = abs(latitude.x - as.numeric(latitude.y)),
-         diff_long = abs(longitude.x - as.numeric(longitude.y))) %>%
-  group_by(UNIQUE_ID_CODE, Date, latitude.x, longitude.x) %>%
-  arrange(diff_lat, diff_long) %>%
-  filter(row_number()==1) %>%
-  select(UNIQUE_ID_CODE, Date, latitude.x, longitude.x, chlor_a) %>%
-  rename(latitude = latitude.x, longitude = longitude.x)
-
-## Add the chla data to the metadata
-metadata_w_chl <- left_join(metadata, meta_match_chla,
-  by = c("UNIQUE_ID_CODE", "date_local" = "Date", "latitude", "longitude"))
-
-# Use a linear model to predict chlorophull from secchi depth
-chl_fit <- lm(as.numeric(chlor_a) ~ as.numeric(secchi_depth), data = metadata_w_chl %>% filter(year == 2018))
-secchi_2017 <- metadata_w_chl %>%
-filter(year == 2017) %>%
-pull(secchi_depth)
-
-metadata_w_chl$chlor_a[metadata_w_chl$year == 2017] <- predict(chl_fit, data.frame(secchi_depth = secchi_2017))
-
-
-## Add the CTD data to the metadata
-metadata_full <- left_join(metadata_w_chl,
-  ctd_w_id %>% select(-c(latitude,longitude)),
-  by = "UNIQUE_ID_CODE")
-
-metadata_full %>%
-select(UNIQUE_ID_CODE, date_local, secchi_depth, Genetics_18sv9_Sample_ID, filename.y) %>%
-View()
-
-metadata_w_samples <- metadata_full %>%
-filter(!is.na(Genetics_18sv9_Sample_ID)) %>%
-filter(!is.na(CTD_file_name))
-
-
-
+### There are 150 unique samples with CTD casts, secchi depths, and associated metadata
+# allison_output <- asv_load %>%
+#   filter(sample %in% paste0("ManifestSample_", sprintf('%0.3d', 93:102))) %>%
+# left_join(., metadata_raw, by = c("sample" = "Genetics_18sv9_Sample_ID"))
+# 
+# write.csv(allison_output, "data/arctic_output.csv", row.names = FALSE)

@@ -31,7 +31,9 @@ my_theme = theme_linedraw() + theme(text = element_text(size = 14), strip.backgr
 
 ##### Figure 1-----
 ### Figure 1 - Sampling effort --- 
-map <- map_data("world")
+map <- map_data("world") %>%
+  filter(region == "Antarctica") %>%
+  mutate(group = 1)
 
 sta_map <- ggplot(metadata %>%
                     mutate(region = factor(region, 
