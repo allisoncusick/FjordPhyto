@@ -22,8 +22,8 @@ options(max.print = 100) #Personal preference
 todays_date <- format(Sys.Date(), "%m%d%Y")
 
 ### Source the metadata and ASV QC scripts
-source("analysis/asv_data_process-2024.r")
-source("analysis/metadata_process-2024.r") 
+# source("analysis/asv_data_process-2024.r")
+# source("analysis/metadata_process-2024.r") 
 ### OR
 ### Load in data
 ## Find most recent file
