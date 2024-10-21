@@ -15,7 +15,7 @@ funlist <-  lapply(packages, function(x) {
 todays_date <- format(Sys.Date(), "%m%d%Y")
 options(max.print = 100)
 # Set Working Directory ----
-setwd("~/Documents/GitHub/FjordPhyto/")
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/FjordPhyto/")
 
 # Load and process metadata -----
 metadata_raw <- read_excel(
@@ -73,7 +73,7 @@ colnames(dist_df) <- c("location", "distance_to_stonington", "site_num")
 
 metadata$site_ids <- factor(metadata$location, levels = dist_df$location, labels = dist_df$site_num)
 
-metadata$land_dist_km <- dist2land(metadata[,c("latitude", "longitude")], bind = F)
+# metadata$land_dist_km <- dist2land(metadata[,c("latitude", "longitude")], bind = F)
 
 # Metadata Output ----
 save(metadata, file = paste0("data/metadata/fjord_phyto_processed-", todays_date, ".Rdata"))
@@ -103,7 +103,10 @@ ctd_rows <- ctd_load |>
   filter(Profile_ID == 0) %>%
   distinct(Unique_ID, .keep_all = TRUE)
 
-# Now we know there are 294 unique CTD files
+# Now we know there are 293 unique CTD files
+metadata_w_ctd <- left_join(ctd_rows, metadata,
+                            by = c("Unique_ID" = "UNIQUE_ID_CODE")) %>%
+  filter(!is.na(time_local))
 
 metadata_w_samples <- left_join(ctd_rows, metadata,
                                 by = c("Unique_ID" = "UNIQUE_ID_CODE")) %>%
@@ -113,6 +116,7 @@ metadata_w_samples <- left_join(ctd_rows, metadata,
 ### There are 150 unique samples with CTD casts, secchi depths, and associated metadata
 # allison_output <- asv_load %>%
 #   filter(sample %in% paste0("ManifestSample_", sprintf('%0.3d', 93:102))) %>%
-# left_join(., metadata_raw, by = c("sample" = "Genetics_18sv9_Sample_ID"))
+# left_join(., metadata_w_samples, by = c("sample" = "Genetics_18sv9_Sample_ID")) %>%
+#   mutate_if(is.list, unlist)
 # 
 # write.csv(allison_output, "data/arctic_output.csv", row.names = FALSE)

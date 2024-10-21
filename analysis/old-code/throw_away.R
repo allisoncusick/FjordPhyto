@@ -2324,6 +2324,68 @@ asv_table_filter %>%
 #   filter(max_prop == max(max_prop))
 
 
+#### Set up phyloseq
+###Phyloseq this
+asv_wide <- asv_table_filter %>%
+  dplyr::select(Feature.ID, sample, rare_reads) %>%
+  pivot_wider(values_from = rare_reads,
+              id_cols = Feature.ID, names_from = sample)
+asv_wide_df <- as.data.frame(asv_wide[,-1]) #gets rid of Feature.ID column
+asv_wide_df[is.na(asv_wide_df)] <- 0 #if there are NA reads, make 0
+
+#Make otu_table
+rownames(asv_wide_df) <- asv_wide$Feature.ID #make FeatureID the rownames
+in_biom <- otu_table(asv_wide_df, taxa_are_rows = T)
+taxa_names(in_biom) <- asv_wide$Feature.ID
+
+#Make sample_data
+in_biom_metadata <- sample_data(metadata_filter)
+sample_names(in_biom_metadata) <- metadata_filter$sample
+
+#Make tax_table
+taxatable <- asv_table_filter %>% 
+  select(Feature.ID, Kingdom, Supergroup, Division, Class, Order, Family, Genus, Species, phytogroups) %>%
+  distinct() %>%
+  as.data.frame()
+in_biom_tax <- tax_table(taxatable %>% select(-Feature.ID) %>% as.matrix()) 
+taxa_names(in_biom_tax) <- taxatable$Feature.ID
+
+#Make phyloseq object
+physeq <- phyloseq(in_biom,
+                   in_biom_metadata,
+                   in_biom_tax)
+
+# Get the top taxa
+top_level <- "phytogroups"
+nested_level <- "Species"
+sample_order <- NULL
+top_asv <- top_taxa(physeq, n_taxa = 10)
+
+# Create names for NA taxa
+ps_tmp <- top_asv$ps_obj %>%
+  name_na_taxa()
+
+# Add labels to taxa with the same names
+ps_tmp <- ps_tmp %>%
+  label_duplicate_taxa(tax_level = nested_level)
+
+# Generate a palette basedon the phyloseq object
+pal <- taxon_colours(ps_tmp,
+                     tax_level = top_level)
+
+# Convert physeq to df
+psdf <- psmelt(ps_tmp)
+nested_top_taxa(physeq,
+                top_tax_level = "Class",
+                nested_tax_level = "Species",
+                n_top_taxa = 3, 
+                n_nested_taxa = 3)
+
+in_biom_tax
+
+
+
+
 
 
 

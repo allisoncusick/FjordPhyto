@@ -1,7 +1,7 @@
 # Code to process ASV tables
 
 # Load Libraries ----
-packages <- c("tidyverse", "dplyr", "tidyr", "readxl")
+packages <- c("tidyverse", "dplyr", "tidyr", "readxl", "vegan")
 
 
 funlist <-  lapply(packages, function(x) {
@@ -14,7 +14,7 @@ funlist <-  lapply(packages, function(x) {
 todays_date <- format(Sys.Date(), "%m%d%Y")
 options(max.print = 100)
 # Set Working Directory ----
-setwd("~/Documents/GitHub/FjordPhyto/")
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/FjordPhyto/")
 
 # Load in data ----
 
@@ -167,11 +167,11 @@ for (i in 1:length(diversity_group)){
   }
   
   piv_all <- asv_table_rare %>%
-    filter(Feature.ID %in% taxa_pull$Feature.ID) %>%
-    dplyr::select(c(Feature.ID, sample, rare_reads)) %>%
-    pivot_wider(names_from = "Feature.ID",
+    filter(Species %in% taxa_pull$Species) %>%
+    dplyr::select(c(Species, sample, rare_reads)) %>%
+    pivot_wider(names_from = "Species",
                 values_from = "rare_reads",
-                values_fn = mean,
+                values_fn = sum,
                 values_fill = 0)
   
   #vegan::specnumber - # species with non-zero reads
