@@ -42,6 +42,43 @@ recent_files <- do.call("rbind", lapply(relevant_files, file.info)) %>%
 lapply(recent_files, load)
 
 ### Output = diversity_df, asv_table_rare, metadata_filter
+label_month <- function(m){
+  format(as.Date(paste0(m, "/01/2020"), "%m/%d/%Y"), "%b")
+}
+metadata$site_ids <- factor(metadata$location, levels = dist_df$location, labels = dist_df$site_num)
+
+full_samples <- metadata %>%
+  mutate(site_name_2 = factor(location, levels = dist_df$location)) %>%
+  group_by(site_name_2, seasonyear, month) %>%
+  reframe(
+    total_samples = length(unique(Genetics_18sv9_Sample_ID))) %>%
+  mutate(month = factor(month, levels = c("11", "12", "01", "02", "03", "04",
+                                          "05", "06", "07", "08", "09", "10"))) %>%
+  ggplot() + 
+  geom_tile(aes(x = month, y = site_name_2, fill = total_samples)) +
+  coord_cartesian(expand = 0) +
+  theme_bw() +
+  labs(x = "", y = "") +
+  scale_x_discrete(labels = function(m)format(as.Date(paste0(m, "/01/2020"), "%m/%d/%Y"), "%b"),
+                   drop = F) +
+  scale_fill_gradient("Samples", low = "lightblue", high = "blue4") +
+  theme(
+    axis.text.x = element_text(size = 9, color = "black", angle = 45, hjust = 1, vjust = 1),
+    axis.text.y = element_text(size = 9),
+    strip.text = element_text(face = "bold", size = 10),
+    strip.background = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    panel.grid = element_blank(),
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10)
+  ) +
+  facet_grid(~seasonyear)
+
+ggsave(
+  filename = paste0(figure_files, "samples_per_month.png"),
+  plot = full_samples,
+  width = 8, height = 8, dpi = 300
+)
 
 ## Directories
 figure_files <- c("~/Documents/Alaina/FjordPhyto/Chapter_3/Figures/")
@@ -122,8 +159,8 @@ sp_colors_df <- asv_table_filter %>%
   as.data.frame()
 
 
-group_colors <- c("#F06400", "#00F064","#008CF0","grey10",
-                  "gold2","#6400F0","#F0008C")
+group_colors <- c("#EE6C4D", "#95B46A","#008CF0","grey40",
+                  "#662C91", "gold2","#F194B4")
 group_colors_df <- data.frame(phytogroups = categories$phytogroups,
                               colors = group_colors,
                               labels = sp_colors_df$sublabel[is.na(sp_colors_df$Species)])
@@ -216,6 +253,38 @@ write.csv(bins_df, paste0(figure_files, "bins_df.csv"))
           
 ## Figure: Environmental variables over time -----
 
+full_df %>%
+  mutate(
+    days_cuts = factor(case_when(days_since <= 50 ~ "Early",
+                                 days_since <= 100 &
+                                   days_since > 50 ~ "Mid",
+                                 TRUE ~ "Late"),
+                       levels = c("Early", "Mid", "Late")),
+    sal_cuts = factor(case_when(Surface_Salinity_ <= 32.5 ~ "Low",
+                                Surface_Salinity_ <= 33.5 &
+                                  Surface_Salinity_ > 32.5 ~ "Mid",
+                                TRUE ~ "High")),
+    temp_cuts = factor(case_when(Surface_Temperature_ <= 0 ~ "Low",
+                                 Surface_Temperature_ <= 1 &
+                                   Surface_Temperature_ > 0 ~ "Mid",
+                                 TRUE ~ "High"))) %>%
+  group_by(days_cuts) %>%
+  reframe(n = length(unique(sample)))
+
+
+metadata_filter %>%
+  mutate(days_cuts = factor(
+    case_when(days_since <= 50 ~ "Early",
+              days_since <= 100 &
+                days_since > 50 ~ "Mid",
+              TRUE ~ "Late"),
+    levels = c("Early", "Mid", "Late"))) %>%
+  group_by(days_cuts) %>%
+  reframe(sss = mean(Surface_Salinity_, na.rm = T),
+          ssd = sd(Surface_Salinity_, na.rm = T),
+          sst = mean(Surface_Temperature_, na.rm = T),
+          sstd = sd(Surface_Temperature_, na.rm = T))
+
 plot_a <- metadata_filter %>%
   filter(seasonyear!="2022-2023") %>%
   ggplot() +
@@ -250,7 +319,8 @@ plot_b <- metadata_filter %>%
                      sec.axis = sec_axis(name = "Salinity", trans = ~.+32)) +
   theme(axis.text.y.right = element_text(color = "red"),
         axis.title.y.right = element_text(color = "red")) +
-  facet_wrap(~seasonyear, nrow = 1)
+  facet_wrap(~seasonyear, nrow = 1) +
+  
 
 plot_c <- plot_a / plot_b
 
@@ -258,9 +328,324 @@ ggsave(paste0(figure_files, "ts-time-all-season.png"),
        plot = plot_c,
        width = 10, height = 5, dpi = 300)
 
+### Figure: Species by sample ----
+species_by_sample <- full_df %>% 
+  filter(Species != "Porosira_sp.") %>%
+  mutate(Species = factor(Species, levels = sp_colors_df$sublabel)) %>%
+  group_by(sample) %>%
+  mutate(norm_reads = rare_reads/sum(rare_reads, na.rm = T)) %>%
+  ungroup() %>%
+  mutate(sample = tolower(sample),
+         sample = gsub("manifest", "M_", gsub("sample_", "", sample)),
+         sample = paste0("**(", sample, ")** ", date),
+         days_cuts = factor(
+           case_when(days_since <= 50 ~ "Early",
+                     days_since <= 100 &
+                       days_since > 50 ~ "Mid",
+                     TRUE ~ "Late"),
+           levels = c("Early", "Mid", "Late")))
 
+species_by_sample %>%
+  select(sample, Species, phytogroups, norm_reads, seasonyear, days_cuts) %>%
+  group_by(sample, phytogroups, seasonyear, days_cuts) %>%
+  reframe(prop_group = sum(norm_reads, na.rm = T)) %>%
+  group_by(seasonyear, days_cuts) %>%
+  reframe(n = length(unique(sample)))
+
+table_sp <- species_by_sample %>%
+  select(sample, Species, phytogroups, norm_reads, seasonyear, days_cuts) %>%
+  group_by(sample, phytogroups, seasonyear, days_cuts) %>%
+  reframe(prop_group = sum(norm_reads, na.rm = T)) %>%
+  group_by(seasonyear, days_cuts, phytogroups) %>%
+  reframe(mean = mean(prop_group, na.rm = T)*100,
+          sd = sd(prop_group, na.rm = T)*100)
+
+table_sp %>% 
+  group_by(seasonyear, days_cuts) %>%
+  filter(mean > 5) %>%
+  group_map(~{
+      paste(.$phytogroups, "make up on average", round(.$mean, 2), "% of the reads with a standard deviation of", round(.$sd, 2), "%")
+  })
+
+plot_a <- full_df %>% 
+  filter(Species != "Porosira_sp.") %>%
+  mutate(Species = factor(Species, levels = sp_colors_df$sublabel)) %>%
+  group_by(sample) %>%
+  mutate(norm_reads = rare_reads/sum(rare_reads, na.rm = T)) %>%
+  ungroup() %>%
+  mutate(sample = tolower(sample),
+         sample = gsub("manifest", "M_", gsub("sample_", "", sample)),
+         sample = paste0("**(", sample, ")** ", date),
+         days_cuts = factor(
+           case_when(days_since <= 50 ~ "Early",
+                     days_since <= 100 &
+                       days_since > 50 ~ "Mid",
+                     TRUE ~ "Late"),
+           levels = c("Early", "Mid", "Late"))) %>%
+  ggplot() +
+  geom_bar(aes(x = factor(sample),
+               y = norm_reads, 
+               fill = Species), 
+           stat = "identity", color = "transparent") +
+  scale_fill_manual(name = "", values = sp_colors_df$colors,
+                    labels = sp_colors_df$sublabel, drop = F) +
+  theme_bw() +
+  my_theme +
+  theme(axis.text.x = element_markdown(angle = 90, vjust = 0.5, hjust = 1, size = 5)) +
+  facet_wrap(seasonyear~days_cuts, scales = "free_x", ncol = 3) +
+  labs(x = "", y = "Proportion of phytoplankton reads per sample") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme(panel.grid = element_blank(),
+        #panel.background = element_rect(fill = "grey90"),
+        legend.text = element_markdown(size = 9))+
+guides(fill=guide_legend(ncol=3))
+
+ggsave("~/Documents/groups_sample_bar_season-with-porosira.png",
+       plot = plot_a,
+       width = 10, height = 8, dpi = 300)
 ##### Figure: Diversity over time ----
 #### Linear regression of the relationship between days since, salinity, and temperature versuse the richness of each phytoplankton group
+full_df %>%
+  select("richness_phytogroups", all_of(env_vars)) %>%
+  drop_na(richness_phytogroups) %>%
+  distinct() %>%
+  lm(richness_phytogroups~days_since+Surface_Temperature_+Surface_Salinity_, data = .) %>%
+  summary
+
+full_df %>%
+  select(-c("richness_phytogroups", "richness_all"), all_of(env_vars)) %>%
+  pivot_longer(cols = contains("richness_"), names_to = "group",
+               values_to = "richness") %>%
+  pivot_longer(cols = c(
+    "days_since", "Surface_Temperature_", "Surface_Salinity_"),
+    names_to = "var",
+    values_to = "values") %>%
+  filter(richness > 0) %>%
+  drop_na(richness) %>%
+  select(group, richness, var, values) %>%
+  distinct() %>%
+  group_by(group, var) %>%
+  split(group_keys(.)) %>%
+  map(~{
+    .x %>%
+      lm(richness~values, data = .) %>%
+      summary
+  })
+full_df %>%
+  select(-c("richness_phytogroups", "richness_all"), all_of(env_vars)) %>%
+  pivot_longer(cols = contains("richness_"), names_to = "group",
+               values_to = "richness") %>%
+  pivot_longer(cols = c(
+    "days_since", "Surface_Temperature_", "Surface_Salinity_"),
+    names_to = "var",
+    values_to = "values") %>%
+  filter(richness > 0) %>%
+  drop_na(richness) %>%
+  select(group, richness, var, values) %>%
+  distinct() %>%
+  group_by(group, var) %>%
+  split(group_keys(.)) %>%
+  map(~{
+    .x %>%
+      lm(richness~values, data = .) %>%
+      summary
+  })
+
+
+
+library(emmeans)
+full_mod <- full_df %>%
+  select(-c("richness_phytogroups", "richness_all"), all_of(env_vars)) %>%
+  pivot_longer(cols = contains("richness_"), names_to = "group",
+               values_to = "richness") %>%
+  drop_na(richness) %>%
+  select(group, richness, all_of(env_vars)) %>%
+  distinct() %>%
+  lm(richness~(days_since+Surface_Temperature_+Surface_Salinity_)*group, data = .) %>% summary
+group_slopes <- emmeans(full_mod, ~group, var = env_vars)
+pairwise_slopes <- contrast(group_slopes, method = "pairwise", adjust = "bonferroni")
+
+do.call("rbind", full_df %>%
+  select(-grep("_all", colnames(.))) %>% 
+  select(contains("_phytogroups")) %>%
+  pivot_longer(cols = contains("richness_"), names_to = "group",
+               values_to = "richness") %>%
+  pivot_longer(cols = c(
+    "days_since", "Surface_Temperature_", "Surface_Salinity_"), 
+    names_to = "var",
+    values_to = "values") %>%
+  filter(richness > 0) %>%
+  drop_na(richness) %>%
+  select(group, richness, values, var) %>%
+  distinct() %>%
+  group_by(var) %>%
+  group_map(~{
+    .x %>%
+      lm(richness~values+group, data = .) %>%
+      summary %>%
+      glance %>%
+      as.data.frame() %>%
+      mutate(
+        group = unique(.x$group),
+        var = unique(.x$var)
+      )
+  }, .keep = T)) %>% View()
+
+full_df %>%
+  select(-grep("_all", colnames(.))) %>% 
+  #select(-contains("_phytogroups")) %>%
+  pivot_longer(cols = contains("richness_"), names_to = "group",
+               values_to = "richness") %>%
+  drop_na(richness) %>%
+  pivot_longer(cols = c(
+    "days_since", "Surface_Temperature_", "Surface_Salinity_"), 
+    names_to = "var",
+    values_to = "values") %>%
+  filter(richness > 0) %>%
+  drop_na(richness) %>%
+  select(group, richness, values, var) %>%
+  distinct() %>%
+  #filter(group == "richness_phytogroups") %>%
+  group_by(var) %>%
+  group_map(~{
+    full_model <- .x %>%
+      lm(richness~values+group, data = .) %>%
+      summary
+  }, .keep = T) 
+
+
+community_richness <- full_df %>%
+  select(-grep("_all", colnames(.))) %>% 
+  #select(-contains("_phytogroups")) %>%
+  pivot_longer(cols = contains("richness_"), names_to = "group",
+               values_to = "richness") %>%
+  drop_na(richness) %>%
+  pivot_longer(cols = c(
+    "days_since", "Surface_Temperature_", "Surface_Salinity_"), 
+    names_to = "var",
+    values_to = "values") %>%
+  filter(richness > 0) %>%
+  drop_na(richness) %>%
+  select(group, richness, values, var) %>%
+  distinct() %>%
+  filter(group == "richness_phytogroups") %>%
+  ggplot(data = ., aes(x = values, y = richness)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(aes(
+    label = paste(
+    ..eq.label.., ..rr.label..,
+    ..p.value.label.., ..f.value.label.., sep = "~~~~"),
+    color = if_else(after_stat(p.value) < 0.05, "s", "ns")),
+    formula = y ~ x, parse = TRUE, p.digits = 2) +
+  facet_wrap(~var, scales = "free_x", ncol = 1, switch = "x",
+             labeller = labeller(
+               var = c(
+                 "days_since" = "Days since Nov. 1",
+                 "Surface_Salinity_" = "Surface Salinity (PSU)",
+                 "Surface_Temperature_" = "Surface Temperature (*C)"))) +
+  coord_cartesian(ylim = c(NA, 60)) +
+  scale_color_manual(name = "", values = c("s" = "red", "ns" = "black"),
+                     labels = c("s" = "p < 0.05", "ns" = "p > 0.05"), 
+                     guide = "none") +
+  scale_y_continuous(name = "Richness (# species)") +
+  theme_linedraw() + 
+  theme(
+    text = element_text(size = 14),
+    strip.background = element_blank(), 
+    strip.text = element_text(size = 13, color = "black"),
+    strip.placement = "outside",
+    axis.title.x = element_blank())
+
+ggsave(paste0(figure_files, "richness_community.png"),
+       plot = community_richness,
+       width = 6, height = 8, dpi = 300)
+
+
+
+plot_lims <- full_df %>%
+  select(-grep("_all", colnames(.))) %>% 
+  select(-contains("_phytogroups")) %>%
+  pivot_longer(cols = contains("richness_"), names_to = "group",
+               values_to = "richness") %>%
+  drop_na(richness) %>%
+  group_by(group) %>%
+  reframe(min = min(richness),
+          max = max(richness) + 1) 
+
+phyto_labels[["richness_phytogroups"]] = "Community"
+all_groups_lm_facet_addcommunity <- full_df %>%
+  select(-grep("_all", colnames(.))) %>% 
+  #select(-contains("_phytogroups")) %>%
+  pivot_longer(cols = contains("richness_"), names_to = "group",
+               values_to = "richness") %>%
+  drop_na(richness) %>%
+  mutate(group = relevel(factor(group), ref = "richness_phytogroups")) %>%
+  pivot_longer(cols = c(
+    "days_since", "Surface_Temperature_", "Surface_Salinity_"), 
+    names_to = "var",
+    values_to = "values") %>%
+  #filter(richness > 0) %>%
+  drop_na(richness) %>%
+  select(group, richness, values, var) %>%
+  distinct() %>%
+  ggplot(data = ., aes(x = values, y = richness)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(aes(label = paste
+                   (..eq.label..,
+                     ..rr.label..,
+                     ..p.value.label..,
+                     ..f.value.label..,
+                     sep = "~~~~"),
+                   color = if_else(after_stat(p.value) < 0.05,
+                                          "s", "ns")),
+               formula = y ~ x, parse = TRUE, p.digits = 2,
+               size = 3) +
+  facet_grid2(group~var, scales = "free",
+              labeller = labeller(
+                .cols = 
+                  c("days_since" = "Days since Nov. 1",
+                    "Surface_Salinity_" = "Surface Salinity (PSU)",
+                    "Surface_Temperature_" = "Surface Temperature (*C)"),
+                .rows = phyto_labels),
+              switch = "x") +
+  ggh4x::facetted_pos_scales(
+    y = list(ylim(15, 60), ylim(0,2), ylim(0,30), ylim(0, 14), ylim(0, 5), ylim(0,5), ylim(0, 18), ylim(0,5))) +
+  scale_color_manual(name = "", values = c("s" = "red", "ns" = "black"),
+                     labels = c("s" = "p < 0.05", "ns" = "p > 0.05"), 
+                     guide = "none") +
+  theme_bw() +
+  my_theme +
+  theme(strip.placement = "outside",
+        axis.title.x = element_blank()) +
+  labs(y = "Richness (# species)")
+
+# ggsave(paste0(figure_files, "richness_eachgroup.png"),
+#        plot = all_groups_lm_facet,
+#        width = 11.5, height = 9, dpi = 300)
+
+ggsave(paste0(figure_files, "richness_eachgroup-withall.png"),
+       plot = all_groups_lm_facet_addcommunity,
+       width = 11.5, height = 10, dpi = 300)
+
+full_df %>%
+  select(-grep("_all", colnames(.))) %>% 
+  pivot_longer(cols = contains("richness_"), names_to = "group",
+               values_to = "richness") %>%
+  drop_na(richness) %>%
+  pivot_longer(cols = c(
+    "days_since", "Surface_Temperature_", "Surface_Salinity_"), 
+    names_to = "var",
+    values_to = "values") %>%
+  filter(richness > 0) %>%
+  drop_na(richness) %>%
+  select(group, richness, values, var) %>%
+  distinct() %>%
+  ggplot(data = ., aes(x = values, y = richness, color = group)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  facet_wrap(var~group, scales = "free", nrow = 3)
 
  lm_vals <- do.call("rbind", full_df %>%
   select(-grep("_all", colnames(.))) %>% 
@@ -276,7 +661,7 @@ ggsave(paste0(figure_files, "ts-time-all-season.png"),
   drop_na(richness) %>%
   select(group, richness, values, var) %>%
   distinct() %>%
-  group_by(group) %>%
+  group_by(var, group) %>%
   group_map(~{do.call("rbind",
     .x %>%
       group_by(var) %>%
@@ -318,20 +703,57 @@ plot_a <- full_df %>%
              labeller = labeller(var = c(
                days_since = "Days since Nov. 1",
                Surface_Salinity_ = "Surface Salinity (PSU)",
-               Surface_Temperature_ = "Surface Temperature (*C)"
+               Surface_Temperature_ = "Surface Temperature (\u00b0C)"
              )), switch = "x") +
   scale_color_manual(name = "", values = group_colors,
                      labels = c("Greenalgae" = "Green algae")) +
   theme(strip.placement = "outside",
+        axis.title.x = element_blank(),
+        plot.title  = element_text(size = 11, face = "italic")) +
+  ggtitle("Group-level") +
+  labs(y = "Richness (# of species)") +
+  coord_cartesian(expand = 1)
+
+plot_top <- full_df %>%
+  select(-grep("_all", colnames(.))) %>% 
+  select(all_of(c(env_vars, "richness_phytogroups"))) %>%
+  distinct() %>%
+  drop_na(richness_phytogroups) %>%
+  pivot_longer(cols = c(
+    "days_since", "Surface_Temperature_", "Surface_Salinity_"), 
+    names_to = "var",
+    values_to = "values") %>%
+  ggplot() +
+  geom_point(aes(x = values, y = richness_phytogroups, color = "Community")) +
+  stat_poly_line(aes(x = values, y = richness_phytogroups, color = "Community"),
+                 method = "lm", show.legend = F) +
+  theme_bw() +
+  my_theme +
+  facet_grid(~var, scales = "free",
+             labeller = labeller(var = c(
+               days_since = "Days since Nov. 1",
+               Surface_Salinity_ = "Surface Salinity (PSU)",
+               Surface_Temperature_ = "Surface Temperature (\u00b0C)"
+             )), switch = "x") +
+  scale_color_manual(name = "", values = "black") +
+  theme(strip.placement = "outside",
         axis.title.x = element_blank()) +
-  labs(y = "# of species") +
-  coord_cartesian(expand = 0)
+  labs(y = "Richness (# of species)") +
+  coord_cartesian(expand = 1) +
+  theme(strip.text = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "none",
+        plot.title  = element_text(size = 11, face = "italic")) +
+  ggtitle("Community-level")
+
+plot_combo <- (plot_top / plot_a) + plot_layout(heights = c(1,2), guides = 'collect', axis_titles = "collect")
 
 ggsave(
-  filename = paste0(figure_files, "all_richness_vars.png"),
-  plot_a,
+  filename = paste0(figure_files, "all_richness_vars-community.png"),
+  plot_combo,
   width = 10,
-  height = 5,
+  height = 6,
   units = "in",
   dpi = 300
 )
@@ -371,7 +793,7 @@ plot_a <- as.data.frame(corr_plot_r) %>%
 ggsave(
   filename = paste0(figure_files, "species_corr.png"),
   plot_a,
-  width = 6,
+  width = 8,
   height = 9,
   units = "in",
   dpi = 300
@@ -405,43 +827,53 @@ ggsave(paste0(figure_files, "species_TS-max_red.png"),
        width = 18, height = 12, dpi = 300)
 
 #### Figure: Voxels ----
-plot_a <- bins_df %>%
-  mutate(Species = factor(Species, levels = sp_colors_df$sublabel)) %>%
-  ggplot() +
+time_matrix <- bins_df %>%
+  select(env_vars) %>% 
+  distinct() 
+
+time_interp <- as.data.frame(interp2xyz(interp(time_matrix$Surface_Salinity_,time_matrix$Surface_Temperature_,time_matrix$days_since)))
+
+ggplot(time_interp, 
+       aes(x = x, y = y, z = z)) +
+  geom_contour_filled( color = "black") +
+  geom_point(data = time_matrix, aes(x = Surface_Salinity_, y = Surface_Temperature_, z = days_since), color = "red", size = 3)
+
+time_matrix <- do.call("rbind", bins_df %>%
+                                select(env_vars) %>% 
+                                distinct() %>%
+                                group_map(~{
+                                  out <- as.data.frame(
+                                    interp2xyz(
+                                      interp(.x$Surface_Salinity_,
+                                             .x$Surface_Temperature_,
+                                             .x$days_since)))
+                                  return(out)
+                                }, .keep = T)) %>%
+  mutate(days_cuts = factor(
+    case_when(z <= 50 ~ "Early",
+              z <= 100 &
+                z > 50 ~ "Mid",
+              z > 100 ~ "Late",
+              TRUE ~ NA),
+    levels = c("Early", "Mid", "Late", NA)))
+
+plot_a <- 
+  ggplot(data = bins_df %>%
+           mutate(Species = factor(Species, levels = sp_colors_df$sublabel))) +
+  geom_contour_filled(data = time_matrix, 
+                      aes(x = x, y = y, z = z,
+                          color = days_cuts),
+                      breaks = time_bins) +
+  scale_fill_manual(name = "", values = time_colors, guide = "none") +
   geom_vline(xintercept = c(32.5, 33.5),
              linetype = "dashed", color = "grey40") +
   geom_hline(yintercept = c(0, 1) , linetype = "dashed", color = "grey40") +
+  new_scale_fill() +
   geom_jitter(aes(y = Surface_Temperature_,
                   x = Surface_Salinity_,
                   fill = Species), shape = 21,
               color = "black", size = 5,
-              width = 0.05, height = 0.25) +
-  scale_fill_manual(name = "", values = sp_colors_df$colors,
-                    labels = sp_colors_df$sublabel, drop = F) +
-  theme_bw() +
-  my_theme +
-  theme(legend.text = element_markdown(size = 9)) +
-  labs(y = bquote(Surface~Temperature~(degree*C)),
-       x = "Surface Salinity (PSU)") +
-  scale_shape_discrete(name = "")
-
-ggsave(paste0(figure_files, "dotplot_species-voxel-all-jitter2.png"),
-       plot = plot_a,
-       width = 14, height = 6, dpi = 300)
-
-#### Figure: Voxels by season ----
-
-plot_a <- bins_df_season %>%
-  mutate(Species = factor(Species, levels = sp_colors_df$sublabel)) %>%
-  ggplot() +
-  geom_vline(xintercept = c(32.5, 33.5),
-             linetype = "dashed", color = "grey40") +
-  geom_hline(yintercept = c(0, 1) , linetype = "dashed", color = "grey40") +
-  geom_jitter(aes(y = Surface_Temperature_,
-                  x = Surface_Salinity_,
-                  fill = Species), shape = 21,
-              color = "black", size = 3,
-              width = 0.05, height = 0.25) +
+              width = 0.05, height = 0.1) +
   scale_fill_manual(name = "", values = sp_colors_df$colors,
                     labels = sp_colors_df$sublabel, drop = F) +
   theme_bw() +
@@ -450,11 +882,67 @@ plot_a <- bins_df_season %>%
   labs(y = bquote(Surface~Temperature~(degree*C)),
        x = "Surface Salinity (PSU)") +
   scale_shape_discrete(name = "") +
-  facet_wrap(~seasonyear)
+  coord_equal(ratio = 0.75) +
+  guides(fill=guide_legend(ncol=3))
 
-ggsave(paste0(figure_files, "dotplot_species-voxel-all-jitter2.png"),
+ggsave(paste0(figure_files, "dotplot-voxel-time_phytogroups.png"),
        plot = plot_a,
-       width = 14, height = 6, dpi = 300)
+       width = 13, height = 6, 
+       dpi = 300)
+
+# library(grDevices)
+# postscript(paste0(figure_files, "dotplot_groups-voxel-all-jitter2.ps"))
+# dev.off()
+#### Figure: Voxels by season ----
+time_matrix_season <- do.call("rbind", bins_df_season %>%
+  select(env_vars, "seasonyear") %>% 
+  distinct() %>%
+  group_by(seasonyear) %>%
+  group_map(~{
+    out <- as.data.frame(
+      interp2xyz(
+        interp(.x$Surface_Salinity_,
+               .x$Surface_Temperature_,
+               .x$days_since)))
+    out$seasonyear <- unique(.x$seasonyear)
+    return(out)
+  }, .keep = T))
+
+library(ggnewscale)
+time_bins <- seq(0, 140, by = 10)
+time_colors <- rev(hcl.colors(length(time_bins), 'Oranges'))
+plot_a <- 
+  ggplot(data = bins_df_season %>%
+           mutate(Species = factor(Species, levels = sp_colors_df$sublabel))) +
+  geom_contour_filled(data = time_matrix_season, 
+                      aes(x = x, y = y, z = z),
+                      breaks = time_bins) +
+  scale_fill_manual(name = "", values = time_colors, guide = "none") +
+  geom_vline(xintercept = c(32.5, 33.5),
+             linetype = "dashed", color = "grey40") +
+  geom_hline(yintercept = c(0, 1) , linetype = "dashed", color = "grey40") +
+  new_scale_fill() +
+  geom_jitter(aes(y = Surface_Temperature_,
+                  x = Surface_Salinity_,
+                  fill = phytogroups), shape = 21,
+              color = "black", size = 3,
+              width = 0.05, height = 0.1) +
+  scale_fill_manual(name = "", values = group_colors_df$colors,
+                    labels = group_colors_df$label, drop = F) +
+  theme_bw() +
+  my_theme +
+  theme(legend.text = element_markdown(size = 9)) +
+  labs(y = bquote(Surface~Temperature~(degree*C)),
+       x = "Surface Salinity (PSU)") +
+  scale_shape_discrete(name = "") +
+  facet_wrap(~seasonyear) +
+  coord_equal(ratio = 1) +
+  guides(fill=guide_legend(ncol=3))
+  
+
+ggsave(paste0(figure_files, "dotplot_group-voxel-season-time-phytogroups.png"),
+       plot = plot_a,
+       width = 12, height = 6, dpi = 300)
 
 #### Figure: Change over a season ----
 gg_test_season1 <- merge(
